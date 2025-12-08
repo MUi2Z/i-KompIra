@@ -2,16 +2,16 @@
 <?php include '../src/components/navbar.php'; ?>
 
 <main>
-  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-      <div class="w-full md:mt-0 sm:max-w-md xl:p-0">
-            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div class="w-full md:mt-0 sm:max-w-md xl:p-0">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8 <?php echo $border ?>">
                 <h1 class="text-xl font-bold leading-tight tracking-tight text-center text-orange-900 md:text-2xl">
-                  Log Masuk Admin
+                    Log Masuk Admin
                 </h1>
                 <form class="space-y-4 md:space-y-6" action="#">
                     <div>
-                      <label for="email" class="block mb-2 text-sm font-medium text-orange-900">Email</label>
-                      <input type="email" name="email" id="email" class="bg-amber-100 border-none shadow text-orange-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="nama@email.com" required="">
+                        <label for="email" class="block mb-2 text-sm font-medium text-orange-900">Email</label>
+                        <input type="email" name="email" id="email" class="bg-amber-100 border-none shadow text-orange-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="nama@email.com" required="">
                     </div>
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-orange-900">Kata Laluan</label>
@@ -28,8 +28,8 @@
                     </p> -->
                 </form>
             </div>
-      </div>
-  </div>
+        </div>
+    </div>
 </main>
 
 <?php include '../src/components/footer.php'; ?>

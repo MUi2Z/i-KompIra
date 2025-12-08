@@ -2,7 +2,9 @@
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
 
         <a href="../public/index.php" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <div class="h-10 w-10 bg-[#E7D8B8] rounded-full shadow-inner"></div>
+            <div class="h-10 w-10 bg-[#E7D8B8] rounded-full shadow-inner">
+                <img src="../src/img/favicon.png" alt="">
+            </div>
             <span class="self-center text-xl font-bold whitespace-nowrap text-gray-800">i-KompIra</span>
         </a>
 
@@ -26,13 +28,13 @@
                     <a href="../public/index.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Utama</a>
                 </li>
                 <li>
-                    <a href="#info.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Info</a>
+                    <a href="../public/info.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Info</a>
                 </li>
                 <li>
-                    <a href="#tutorial.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Tutorial</a>
+                    <a href="../public/tutorial.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Tutorial</a>
                 </li>
                 <li>
-                    <a href="#activity.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Penyertaan</a>
+                    <a href="../public/activity.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Penyertaan</a>
                 </li>
             </ul>
         </div>

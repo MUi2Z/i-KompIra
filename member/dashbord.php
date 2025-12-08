@@ -2,7 +2,8 @@
 <?php include '../src/components/navbar.php'; ?>
 
     <div class="flex flex-col lg:flex-row min-h-screen">
-        <aside class="w-full lg:w-64 bg-white shadow-lg p-6 flex flex-col items-center text-center lg:items-start space-y-4">
+        <?php include '../src/components/sidebar_member.php'; ?>
+        <!-- <aside class="w-full lg:w-64 bg-white shadow-lg p-6 flex flex-col items-center text-center lg:items-start space-y-4">
             <div class="flex items-center space-x-2 mb-6">
                 <div class="rounded-full bg-gray-200 h-16 w-16 flex items-center justify-center">
                     <svg class="h-10 w-10 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
@@ -18,39 +19,38 @@
             <a href="#" class="w-full py-3 px-4 bg-orange-400 text-white font-semibold rounded-lg shadow hover:bg-orange-500 transition duration-200">URUS MODUL</a>
             <a href="#" class="w-full py-3 px-4 bg-orange-400 text-white font-semibold rounded-lg shadow hover:bg-orange-500 transition duration-200">URUS IRAMA</a>
             <a href="#" class="w-full py-3 px-4 bg-red-500 text-white font-semibold rounded-lg shadow hover:bg-red-600 transition duration-200">DASHBOARD</a>
-        </aside>
+        </aside> -->
 
         <main class="flex-1 p-6 lg:p-10">
-            <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center lg:text-left">AKAUN PENYELIA</h1>
+            <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center lg:text-center">AKAUN AHLI</h1>
 
             <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <tbody class="bg-white divide-y divide-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO. KAD PENGENALAN</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">JENIS IRAMA</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">SEMAK</th>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider">NAMA: </td>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider"><?php echo "PENGUSER" /* name */ ?></td>
                         </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php for ($i = 0; $i < 4; $i++): ?>
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button class="py-2 px-4 bg-yellow-600 text-white rounded-md shadow-sm hover:bg-yellow-700 transition duration-200">SEMAK</button>
-                            </td>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider">EMAIL: </td>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider"><?php echo "literature5@gmail.com" /* email */ ?></td>
                         </tr>
-                        <?php endfor; ?>
+                        <tr>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider">NO. KAD PENGENALAN: </td>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider"><?php echo "060030112323" /* icno */ ?></td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider">KURSUS: </td>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider"><?php echo "KOMPUTER" /* course */ ?></td>
+                        </tr>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider">ROLE KOMPANG</td>
+                            <td class="px-3 py-4 text-sm text-gray-900 tracking-wider"><?php echo "MENYILANG" /* role */ ?></td>
+                        </tr>
                     </tbody>
                 </table>
 
                 <div class="mt-6 text-center">
-                    <button class="py-2 px-6 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition duration-200">TAMBAH</button>
+                    <button class="py-2 px-6 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition duration-200">EDIT</button>
                 </div>
             </div>
         </main>

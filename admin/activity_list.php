@@ -11,38 +11,38 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO. KAD PENGENALAN</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">JENIS IRAMA</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">SEMAK</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TAJUK AKTIVITI</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IMEJ KECIL</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TARIKH LATIHAN</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TARIKH PERSEMBAHAN</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">TINDAKAN</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <?php // for ($i = 0; $i < 4; $i++): ?>
+                        <?php // Placeholder Data for Activities ?>
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">23</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Husaini Rasydin</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0708118283</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Melalu</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">Persembahan Tarian Zapin</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800"><a href="#">zapin_thumb.jpg</a></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2025-10-01</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2025-10-15</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <button class="py-2 px-4 bg-yellow-600 text-white rounded-md shadow-sm hover:bg-yellow-700 transition duration-200">SEMAK</button>
                             </td>
                         </tr>
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">24</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Imran Latif</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">060418109988</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Menyilang</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">Sesi Latihan Keroncong</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800"><a href="#">keroncong_thumb.png</a></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2025-11-05</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">N/A</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <button class="py-2 px-4 bg-yellow-600 text-white rounded-md shadow-sm hover:bg-yellow-700 transition duration-200">SEMAK</button>
                             </td>
                         </tr>
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">26</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Firaz Mirza</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">061129102344</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Melalu</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">Bengkel Alat Muzik Tradisional</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800"><a href="#">bengkel_thumb.jpg</a></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-01-20</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2026-02-01</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <button class="py-2 px-4 bg-yellow-600 text-white rounded-md shadow-sm hover:bg-yellow-700 transition duration-200">SEMAK</button>
                             </td>

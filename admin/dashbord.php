@@ -17,11 +17,11 @@
                 <div class="w-full space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
                         <p class="font-semibold text-gray-700 sm:text-right sm:col-span-1">EMAIL :</p>
-                        <p class="display-field-bg border border-gray-400 rounded-md p-2 shadow-inner w-full truncate sm:col-span-2"><?php echo 'lyv4memusic@gmail.com' ?></p>
+                        <p class="display-field-bg border border-gray-400 rounded-md p-2 shadow-inner w-full truncate sm:col-span-2"><?php echo 'lyv4memusic@gmail.com' /* email */ ?></p>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
                         <p class="font-semibold text-gray-700 sm:text-right sm:col-span-1">KATA LALUAN :</p>
-                        <p class="display-field-bg border border-gray-400 rounded-md p-2 shadow-inner w-full sm:col-span-2"><?php echo '**********' ?></p>
+                        <p class="display-field-bg border border-gray-400 rounded-md p-2 shadow-inner w-full sm:col-span-2"><?php echo '**********' /* password */ ?></p>
                     </div>
                 </div>
             </div>

@@ -1,3 +1,5 @@
+<?php $oof = 1;// include '../backend/connection.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +24,11 @@
             background-color: #F8F4E9;
         }
     </style>
+
+    <?php
+        // Define border style for login form
+        $border = "border-2 border-orange-300 rounded-lg";
+    ?>
 </head>
 <body>
-    
+
