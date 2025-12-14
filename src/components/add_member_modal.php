@@ -1,6 +1,6 @@
 <!-- modal shown after 'tambah' clicked -->
-<div id="addMemberModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/5 lg:w-2/5 shadow-lg rounded-md bg-white">
+<div id="addMemberModal" class="<?php echo $modal_outer; ?>">
+    <div class="<?php echo $modal_inner; ?>">
         
         <div class="flex justify-between items-center pb-3 border-b">
             <h3 class="text-2xl font-semibold text-gray-800">Tambah Ahli Baru</h3>

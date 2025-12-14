@@ -26,8 +26,10 @@
     </style>
 
     <?php
-        // Define border style for login form
+        // style templates
         $border = "border-2 border-orange-300 rounded-lg";
+        $modal_outer = "fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50";
+        $modal_inner = "relative top-20 mx-auto p-5 border w-11/12 md:w-3/5 lg:w-2/5 shadow-lg rounded-md bg-white";
     ?>
 </head>
 <body>
