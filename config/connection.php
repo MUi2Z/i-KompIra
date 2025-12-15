@@ -46,10 +46,10 @@
        // ===================================
        
        // Gunakan pemboleh ubah $_ENV yang telah ditetapkan dari .env
-       $servername = $_ENV['DB_HOST'] ?? 'localhost';
-       $username = $_ENV['DB_USERNAME'] ?? 'root';
-       $password = $_ENV['DB_PASSWORD'] ?? '';
-       $dbname = $_ENV['DB_DATABASE'] ?? 'default_db';
+       $servername = $_ENV['DB_HOST'];
+       $username = $_ENV['DB_USERNAME'];
+       $password = $_ENV['DB_PASSWORD'];
+       $dbname = $_ENV['DB_DATABASE'];
        
        // Create connection
        $conn = new mysqli($servername, $username, $password, $dbname);
