@@ -4,7 +4,7 @@
     include '../src/components/navbar.php'; 
 
     // Fetch data dari jadual 'activities'
-    $sql = "SELECT activityID, activityTitle, activityDesc, createdAt FROM activities ORDER BY createdAt DESC";
+    $sql = "SELECT activityID, activityTittle, activityDesc, createdAt FROM activities ORDER BY createdAt DESC";
     $result = $conn->query($sql);
 
     $activities = [];
