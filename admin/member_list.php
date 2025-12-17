@@ -1,7 +1,7 @@
 <?php
     include '../config/connection.php'; 
     include '../src/components/header.php'; 
-    include '../src/components/navbar.php'; 
+    include '../src/components/navbar.php';
 
     // 2. Fetch data from the MySQL View
     $sql = "SELECT memberID, fullName, NRIC, beatRoleType FROM members";
@@ -19,9 +19,13 @@
     <div class="flex flex-col lg:flex-row min-h-screen">
         <?php include '../src/components/sidebar_admin.php'; ?>
 
+        <button id="sidebarToggle" class="lg:hidden p-2 text-gray-700 focus:outline-none z-100">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
         <main class="flex-1 p-6 lg:p-10">
             <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Senarai Ahli Kelab</h1>
-
             <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
                 
                 <table class="min-w-full divide-y divide-gray-200">
