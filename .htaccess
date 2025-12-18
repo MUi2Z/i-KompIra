@@ -1,1 +1,10 @@
-Options -Indexes
+RewriteEngine On
+
+# Jika fail wujud, guna fail itu
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Tukar /login kepada /public/login.php secara automatik
+RewriteRule ^login$ public/login.php [L]
+RewriteRule ^register$ public/register.php [L]
+RewriteRule ^dashboard$ admin/dashboard.php [L]
