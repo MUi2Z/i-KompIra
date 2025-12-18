@@ -4,16 +4,11 @@
     include '../src/components/navbar.php'; 
 
     // Fetch data dari jadual 'activities'
-    $sql = "SELECT activityID, activityTittle, activityDesc, createdAt FROM activities ORDER BY createdAt DESC";
+    $sql = "SELECT a.*, COUNT(p.participationID) as total_participants 
+            FROM activities a 
+            LEFT JOIN participations p ON a.activityID = p.activityID 
+            GROUP BY a.activityID";
     $result = $conn->query($sql);
-
-    $activities = [];
-    if ($result && $result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $activities[] = $row;
-        }
-    }
-    $conn->close();
 ?>
 
     <div class="flex flex-col lg:flex-row min-h-screen">
@@ -34,45 +29,34 @@
                 </div>";
             }
             ?>
-            <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
-                
+            <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto mt-6">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TAJUK AKTIVITI</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TARIKH DIBUAT</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">TINDAKAN</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Gambar</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tajuk Aktiviti</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Peserta</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Tindakan</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php if (empty($activities)): ?>
-                            <tr>
-                                <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Tiada aktiviti ditemui.</td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($activities as $activity): ?>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo htmlspecialchars($activity['activityID']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo htmlspecialchars($activity['activityTittle']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo date('d M Y', strtotime($activity['createdAt'])); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button class="py-2 px-4 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 transition duration-200">LIHAT</button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                    <tbody class="divide-y divide-gray-200">
+                        <?php while($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td class="px-6 py-4">
+                                <img src="<?php echo $row['activityThumbnail']; ?>" class="h-12 w-20 object-cover rounded">
+                            </td>
+                            <td class="px-6 py-4 font-medium"><?php echo $row['activityTittle']; ?></td>
+                            <td class="px-6 py-4 text-sm text-blue-600 font-bold">
+                                <?php echo $row['total_participants']; ?> Orang
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
+                                <button class="text-red-600 hover:text-red-900">Padam</button>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
                     </tbody>
                 </table>
-
-                <div class="mt-6 text-center">
-                    <button 
-                        id="openAddActivityModal"
-                        class="py-2 px-6 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition duration-200"
-                    >
-                        TAMBAH AKTIVITI
-                    </button>
-                </div>
             </div>
         </main>
     </div>

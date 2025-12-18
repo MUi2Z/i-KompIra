@@ -5,7 +5,7 @@
 
         <section class="bg-white/50 p-4 rounded-lg shadow-md">
             <video class="mx-auto m-2" controls width="900" height="400">
-                <source src="https://example.com/videos/my-online-video.mp4" type="video/mp4">
+                <source src="../src/vid/komp 1.mp4" type="video/mp4">
                 
                 <!-- Fallback text for browsers that do not support the video tag -->
                 Your browser does not support the video tag.

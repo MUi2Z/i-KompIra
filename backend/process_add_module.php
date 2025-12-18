@@ -43,28 +43,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      * @return string|false Path fail yang berjaya dimuat naik atau FALSE jika gagal
      */
     function handleFileUpload($fileArray, $targetDir, $allowedTypes, $maxSize, $prefix) {
-        if ($fileArray["error"] !== UPLOAD_ERR_OK) {
-            return false; // Ralat muat naik sistem
-        }
-
-        $fileType = strtolower(pathinfo($fileArray["name"], PATHINFO_EXTENSION));
-        
-        if ($fileArray["size"] > $maxSize) {
-            return "Saiz fail terlalu besar. Had maksimum: " . ($maxSize / 1000000) . "MB.";
-        }
-        if (!in_array($fileType, $allowedTypes)) {
-            return "Jenis fail tidak dibenarkan. Jenis dibenarkan: " . implode(', ', $allowedTypes);
-        }
-
-        $uniqueFilename = uniqid($prefix . '_', true) . '.' . $fileType;
-        $target_file = $targetDir . $uniqueFilename;
-
-        if (move_uploaded_file($fileArray["tmp_name"], $target_file)) {
-            return $target_file;
-        } else {
-            return "Gagal memindahkan fail.";
-        }
+    if ($fileArray["error"] !== UPLOAD_ERR_OK) {
+        return ['success' => false, 'message' => "Ralat sistem muat naik."];
     }
+
+    $fileType = strtolower(pathinfo($fileArray["name"], PATHINFO_EXTENSION));
+    
+    if ($fileArray["size"] > $maxSize) {
+        return ['success' => false, 'message' => "Saiz fail terlalu besar."];
+    }
+    if (!in_array($fileType, $allowedTypes)) {
+        return ['success' => false, 'message' => "Jenis fail tidak dibenarkan."];
+    }
+
+    $uniqueFilename = uniqid($prefix . '_', true) . '.' . $fileType;
+    $target_file = $targetDir . $uniqueFilename;
+
+    if (move_uploaded_file($fileArray["tmp_name"], $target_file)) {
+        // Jika berjaya, pulangkan success = true dan path
+        return ['success' => true, 'path' => $target_file];
+    } else {
+        return ['success' => false, 'message' => "Gagal memindahkan fail ke folder."];
+    }
+}
 
 
     // ===================================
@@ -74,16 +75,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_FILES["moduleThumbnail"], 
         $thumbnail_dir, 
         ['jpg', 'jpeg', 'png', 'gif'], 
-        5000000, // 5MB
+        5000000, 
         'thumb'
     );
-    if (is_string($thumbnailResult)) {
-        header($errorRedirect . urlencode("Ralat Thumbnail: " . $thumbnailResult));
+    
+    if (!$thumbnailResult['success']) {
+        header($errorRedirect . urlencode("Ralat Thumbnail: " . $thumbnailResult['message']));
         exit();
     }
-    $thumbnailPath = $thumbnailResult;
-
-
+    $thumbnailPath = $thumbnailResult['path']; // Ambil path jika berjaya
+    
+    
     // ===================================
     // 3. Proses Muat Naik Dokumen
     // ===================================
@@ -91,16 +93,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_FILES["moduleDocs"], 
         $docs_dir, 
         ['pdf', 'doc', 'docx'], 
-        10000000, // 10MB
+        10000000, 
         'doc'
     );
-    if (is_string($docsResult)) {
-        // Jika ralat dokumen, padam thumbnail yang mungkin sudah dimuat naik
-        if ($thumbnailPath && file_exists($thumbnailPath)) { unlink($thumbnailPath); }
-        header($errorRedirect . urlencode("Ralat Dokumen: " . $docsResult));
+    
+    if (!$docsResult['success']) {
+        if (file_exists($thumbnailPath)) { unlink($thumbnailPath); }
+        header($errorRedirect . urlencode("Ralat Dokumen: " . $docsResult['message']));
         exit();
     }
-    $docsPath = $docsResult;
+    $docsPath = $docsResult['path']; // Ambil path jika berjaya
 
 
     // ===================================

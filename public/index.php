@@ -10,15 +10,15 @@
                 <div class="relative h-56 overflow-hidden rounded-xl md:h-96 w-full">
                     <!-- Item 1 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="https://alkhudhri.com/wp-content/uploads/2020/12/kompang-2-768x576-2-768x480.jpg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang traditional music performance">
+                        <img src="../src/img/komp_win2.jpeg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang traditional music performance">
                     </div>
                     <!-- Item 2 -->
                     <div class="duration-700 ease-in-out" data-carousel-item="active">
-                        <img src="https://i.ytimg.com/vi/5Tu9mEd96rE/maxresdefault.jpg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang drummers performing">
+                        <img src="../src/img/komp_team1.jpeg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang drummers performing">
                     </div>
                     <!-- Item 3 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="https://alkhudhri.com/wp-content/uploads/2020/12/kompang-2-768x576-2-768x480.jpg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang traditional music performance">
+                        <img src="../src/img/komp_johan1.jpeg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang traditional music performance">
                     </div>
                     <!-- Item 4 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item="active">

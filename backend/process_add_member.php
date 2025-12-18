@@ -1,76 +1,44 @@
 <?php
-    // process_add_member.php
+// backend/process_add_member.php
+include '../config/connection.php';
 
-    // 1. Sertakan fail sambungan pangkalan data
-    // Pastikan path ini betul berdasarkan lokasi fail process_add_member.php anda
-    include '../config/connection.php'; 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Ambil data dari form
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password!
+    $fullName = $_POST['fullName'];
+    $nric = $_POST['NRIC'];
+    $programme = $_POST['programme'];
+    $beatRoleType = $_POST['beatRoleType'];
+    $kohort = $_POST['kohort'];
+    $status = 'active'; // Admin tambah terus jadi active
+    $role = 'member';   // Admin tambah terus jadi member
 
-    // 2. Semak jika borang dihantar melalui kaedah POST
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Mulakan Transaksi SQL
+    $conn->begin_transaction();
 
-        // 3. Ambil data dari borang dan bersihkan/validate
-        // Gunakan fungsi trim() untuk membuang whitespace dan htmlspecialchars() untuk keselamatan XSS
-        $fullName       = trim($_POST['fullName'] ?? '');
-        $nric           = trim($_POST['NRIC'] ?? '');
-        $programme      = trim($_POST['programme'] ?? '');
-        $beatRoleType   = trim($_POST['beatRoleType'] ?? '');
-        $kohort         = (int)($_POST['kohort'] ?? 0);
-        $status         = trim($_POST['status'] ?? 'pending'); // Default to 'pending' or 'active'
-        $userID         = (int)($_POST['userID'] ?? 0); // Pastikan ini datang dari SESSION ID pengguna yang log masuk sebenar
+    try {
+        // 1. Masukkan ke jadual USERS
+        $stmt1 = $conn->prepare("INSERT INTO users (email, password, role) VALUES (?, ?, ?)");
+        $stmt1->bind_param("sss", $email, $password, $role);
+        $stmt1->execute();
+        
+        // Ambil userID yang baru dicipta
+        $newUserID = $conn->insert_id;
 
-        // Validasi Asas
-        if (empty($fullName) || empty($nric) || empty($programme) || empty($beatRoleType) || $kohort == 0 || $userID == 0) {
-            // Redirect balik ke laman senarai dengan mesej ralat
-            header("Location: ../admin/member_list.php?status=error&message=Sila%20lengkapkan%20semua%20medan%20yang%20diperlukan.");
-            exit();
-        }
+        // 2. Masukkan ke jadual MEMBER_PROFILES
+        $stmt2 = $conn->prepare("INSERT INTO members (userID, fullName, NRIC, programme, beatRoleType, kohort, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt2->bind_param("issssss", $newUserID, $fullName, $nric, $programme, $beatRoleType, $kohort, $status);
+        $stmt2->execute();
 
-        // 4. Sediakan pertanyaan SQL menggunakan Prepared Statements
-        $sql = "INSERT INTO members (fullName, NRIC, programme, beatRoleType, kohort, status, userID) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Jika semua OK, commit
+        $conn->commit();
+        header("Location: ../admin/member_list.php?status=success&message=Ahli baru berjaya didaftarkan");
 
-        // Buat Prepared Statement
-        if ($stmt = $conn->prepare($sql)) {
-
-            // Ikat pemboleh ubah ke Prepared Statement sebagai parameter
-            // s: string, i: integer
-            $stmt->bind_param(
-                "ssssisi", // Jenis data: 4 string, 1 integer, 1 string, 1 integer
-                $fullName, 
-                $nric, 
-                $programme, 
-                $beatRoleType, 
-                $kohort, 
-                $status,
-                $userID 
-            );
-
-            // 5. Laksanakan Statement
-            if ($stmt->execute()) {
-                // Berjaya
-                $message = urlencode("Ahli baru, $fullName, telah berjaya didaftarkan.");
-                header("Location: ../admin/member_list.php?status=success&message=$message");
-            } else {
-                // Ralat pelaksanaan
-                $message = urlencode("Ralat pendaftaran ahli: " . $stmt->error);
-                header("Location: ../admin/member_list.php?status=error&message=$message");
-            }
-
-            // Tutup Statement
-            $stmt->close();
-
-        } else {
-            // Ralat penyediaan Statement
-            $message = urlencode("Ralat SQL (Prepare): " . $conn->error);
-            header("Location: ../admin/member_list.php?status=error&message=$message");
-        }
-
-        // Tutup sambungan pangkalan data
-        $conn->close();
-
-    } else {
-        // Jika tidak dihantar melalui POST, redirect kembali
-        header("Location: ../admin/member_list.php");
-        exit();
+    } catch (Exception $e) {
+        // Jika ralat, batalkan semua (rollback)
+        $conn->rollback();
+        header("Location: ../admin/member_list.php?status=error&message=Gagal daftar: " . $e->getMessage());
     }
+}
 ?>

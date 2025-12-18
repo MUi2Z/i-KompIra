@@ -1,7 +1,4 @@
-<?php 
-// module_list.php
-
-// Sertakan fail sambungan (pastikan path betul)
+<?php
 include '../config/connection.php'; 
 include '../src/components/header.php'; 
 include '../src/components/navbar.php'; 
