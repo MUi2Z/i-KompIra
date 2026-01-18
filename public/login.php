@@ -6,7 +6,7 @@
     </div>
 <?php endif; ?>
 
-<div class="min-h-screen bg-[#EFE6D5] flex items-center justify-center p-6">
+<div class="min-h-screen flex items-center justify-center p-6">
     <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
         
         <div class="text-center mb-8">

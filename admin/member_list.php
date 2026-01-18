@@ -7,7 +7,7 @@
     session_start();
     if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         // Jika bukan admin, tendang ke login atau home
-        // header("Location: ../public/login.php"); exit(); 
+        header("Location: ../public/login.php"); exit();    
     }
 
     // 2. Fetch data dari jadual member_profiles yang berstatus 'active'

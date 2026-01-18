@@ -3,8 +3,8 @@ session_start();
 include '../config/connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = $_POST['password'];
+    $email = mysqli_real_escape_string($conn, trim($_POST['email']));
+    $password = trim($_POST['password']);
 
     // 1. Cari pengguna berdasarkan email
     $sql = "SELECT * FROM users WHERE email = ?";
