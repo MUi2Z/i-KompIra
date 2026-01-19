@@ -1,7 +1,7 @@
 <?php
 include '../config/connection.php'; 
 include '../src/components/header.php'; 
-include '../src/components/navbar.php'; 
+// include '../src/components/navbar.php';
 
 // Fetch data dari jadual 'modules'
 $sql = "SELECT moduleID, moduleName, moduleDesc, created_at FROM modules ORDER BY created_at DESC";

@@ -2,7 +2,7 @@
     session_start();
     include '../config/connection.php';
     include '../src/components/header.php';
-    include '../src/components/navbar.php';
+    // include '../src/components/navbar.php';
 
     if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         // Jika bukan admin, tendang ke login atau home

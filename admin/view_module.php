@@ -25,7 +25,7 @@ if ($result->num_rows === 0) {
 $module = $result->fetch_assoc();
 
 include '../src/components/admin_header.php';
-include '../src/components/admin_navbar.php';
+// include '../src/components/admin_navbar.php';
 ?>
 
 <!DOCTYPE html>

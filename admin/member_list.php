@@ -1,7 +1,7 @@
 <?php
     include '../config/connection.php'; 
     include '../src/components/header.php'; 
-    include '../src/components/navbar.php';
+    // include '../src/components/navbar.php';
 
     // 1. Sertakan sesi untuk semakan role (Optional tapi digalakkan)
     session_start();

@@ -1,5 +1,7 @@
-<?php include '../src/components/header.php'; ?>
-<?php include '../src/components/navbar.php'; ?>
+<?php
+    include '../src/components/header.php';
+    // include '../src/components/navbar.php';
+?>
 
     <div class="flex flex-col lg:flex-row min-h-screen">
         <?php include '../src/components/sidebar_admin.php'; ?>
