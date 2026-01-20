@@ -1,30 +1,44 @@
 <?php include '../src/components/header.php'; ?>
 <?php include '../src/components/navbar.php'; ?>
 
+<?php
+// Kandungan untuk kad di halaman utama
+// Ambil 5 aktiviti terbaru untuk Carousel (kecuali gambar default)
+$carouselSql = "SELECT activityTitle, activityThumbnail 
+                FROM activities 
+                WHERE activityThumbnail != 'default_thumbnail.png' 
+                ORDER BY createdAt DESC LIMIT 5";
+$carouselResult = $conn->query($carouselSql);
+
+// Ambil semua aktiviti aktif untuk Activity Cards
+$activitiesSql = "SELECT * FROM activities 
+                  WHERE status = 'ongoing' 
+                  ORDER BY trainDate ASC";
+$activitiesResult = $conn->query($activitiesSql);
+?>
+
     <main class="container mx-auto py-12 px-4 md:px-8 lg:px-12">
 
-        <!-- Carousel Section - Kept as is, positioned correctly within the main container -->
+        <!-- Slideshow Carousel Section -->
+        <div id="hero" class="relative border-8 rounded-2xl border-[#E7D8B8]" data-carousel="slide">
+            <!-- Carousel wrapper: Changed w-4/6 to w-full for better layout -->
+            <div id="activityCarousel" class="relative w-full overflow-hidden rounded-2xl shadow-lg h-[400px]">
+                <?php if ($carouselResult && $carouselResult->num_rows > 0): ?>
+                    <?php $first = true; foreach ($carouselResult as $row): ?>
+                        <div class="carousel-item <?php echo $first ? 'active' : 'hidden'; ?> duration-700 ease-in-out">
+                            <img src="../uploads/activities/<?php echo $row['activityThumbnail']; ?>" 
+                                 class="absolute block w-full h-full object-cover" 
+                                 alt="<?php echo htmlspecialchars($row['activityTitle']); ?>">
+                            <div class="absolute bottom-0 bg-black/50 w-full p-5 text-white">
+                                <h2 class="text-xl font-bold"><?php echo htmlspecialchars($row['activityTitle']); ?></h2>
+                            </div>
+                        </div>
+                    <?php $first = false; endforeach; ?>
+                <?php else: ?>
+                    <img src="../assets/img/hero-bg.jpg" class="w-full h-full object-cover" alt="Welcome">
+                <?php endif; ?>
+            </div>
         <section class="relative bg-white/50 p-6 rounded-xl shadow-xl">
-            <div id="hero" class="relative border-8 rounded-2xl border-[#E7D8B8]" data-carousel="slide">
-                <!-- Carousel wrapper: Changed w-4/6 to w-full for better layout -->
-                <div class="relative h-56 overflow-hidden rounded-xl md:h-96 w-full">
-                    <!-- Item 1 -->
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="../src/img/komp_win2.jpeg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang traditional music performance">
-                    </div>
-                    <!-- Item 2 -->
-                    <div class="duration-700 ease-in-out" data-carousel-item="active">
-                        <img src="../src/img/komp_team1.jpeg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang drummers performing">
-                    </div>
-                    <!-- Item 3 -->
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="../src/img/komp_johan1.jpeg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang traditional music performance">
-                    </div>
-                    <!-- Item 4 -->
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item="active">
-                        <img src="https://i.ytimg.com/vi/5Tu9mEd96rE/maxresdefault.jpg" class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Kompang drummers performing">
-                    </div>
-                </div>
                 <!-- Slider controls -->
                 <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
                     <span class="inline-flex items-center justify-center w-10 h-10 rounded-full group-hover:bg-amber-200/80 group-focus:ring-white group-focus:outline-none">
@@ -45,80 +59,46 @@
             </div>
         </section>
 
-        <!-- Cards Section: Modified to use <table> for 2x2 arrangement -->
-        <section class="mt-10">
-            <?php
-            // Sample data for cards
-            $cards = [
-                [
-                    'title' => 'Mari Sertai',
-                    'content' => 'Pertandingan dan Modul Pembelajaran Kompang Digital i-KompIra kini dibuka untuk pendaftaran!',
-                    'buttons' => [
-                        ['text' => 'Lihat Aktiviti', 'color' => 'bg-yellow-600 hover:bg-yellow-700', 'arrow' => true]
-                    ]
-                ],
-                [
-                    'title' => 'PERTANDINGAN KOMPANG PERINGKAT KEBANGSAAN 2025',
-                    'content' => 'Ini peluang keemasan anda untuk menyerlahkan bakat kompang dan mengangkat irama warisan kita ke persada dunia!
+        <!-- Activity Cards Section -->
+        <section class="mt-10">            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                <?php while($activity = $activitiesResult->fetch_assoc()): ?>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition">
+                    <img class="h-48 w-full object-cover" 
+                         src="../uploads/activities/<?php echo $activity['activityThumbnail']; ?>" 
+                         alt="Activity Image">
 
-🌸 Pendaftaran percuma
-🌸 Pentas nasional 
-🌸 Hadiah menarik menanti
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-gray-800"><?php echo htmlspecialchars($activity['activityTitle']); ?></h3>
+                            <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase">
+                                <?php echo $activity['status']; ?>
+                            </span>
+                        </div>
 
-JOM SERTAI KAMI DAN KEMERIAHAN FESTIVAL BUDAYA MALAYSIA 2025!',
-                    'buttons' => [
-                        ['text' => 'Lihat Lagi Aktiviti', 'color' => 'bg-yellow-600 hover:bg-yellow-700', 'arrow' => true],
-                        ['text' => 'Sertai', 'color' => 'bg-green-600 hover:bg-green-700', 'arrow' => true]
-                    ]
-                ]
-            ];
-            ?>
-            
-            <!-- Table structure for the 2x2 layout -->
-            <table class="w-full border-collapse">
-                <tbody>
-                    <!-- The <tr> acts as a responsive container: vertical stack (flex-col) on small screens, horizontal (flex-row) on large screens, with spacing (gap-8) -->
-                    <tr class="flex flex-col lg:flex-row w-full gap-8">
-                        <?php foreach ($cards as $card) { ?>
-                        <!-- Each card is a <td>, taking full width on mobile (w-full) and half width on large screens (lg:w-1/2) -->
-                        <td class="w-full lg:w-1/2 p-0">
-                            <div class="bg-white/60 p-8 rounded-xl shadow-xl flex flex-col items-center gap-6 h-full">
-                                <!-- Icon/Image Placeholder -->
-                                <div class="flex-shrink-0">
-                                    <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center border-4 border-white shadow-inner">
-                                        <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 5a1 1 0 112 0v2.586l1.707-1.707a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414L9 7.586V5z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </div>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2"><?php echo htmlspecialchars($activity['activityDesc']); ?></p>
 
-                                <!-- Content -->
-                                <div class="flex-grow w-full text-center">
-                                    <h3 class="text-lg font-extrabold text-orange-800 uppercase tracking-widest leading-snug mb-3"><?php echo $card['title']; ?></h3>
-                                    <p class="mt-2 text-base text-gray-700 leading-relaxed whitespace-pre-line">
-                                        <?php echo $card['content']; ?>
-                                    </p>
-                                </div>
-                                
-                                <!-- Button container -->
-                                <div class="mt-6 w-full flex flex-col sm:flex-row justify-center items-center gap-3">
-                                    <?php foreach($card['buttons'] as $button) { ?>
-                                    <button class="<?php echo $button['color']; ?> text-white font-bold py-2 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center w-full sm:w-auto">
-                                        <span><?php echo $button['text']; ?></span>
-                                        <?php if ($button['arrow']) { ?>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                        </svg>
-                                        <?php } ?>
-                                    </button>
-                                    <?php } ?>
-                                </div>
+                        <div class="space-y-2 mb-5">
+                            <div class="flex items-center text-xs text-gray-500">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                Latihan: <?php echo date('d M Y', strtotime($activity['trainDate'])); ?>
                             </div>
-                        </td>
-                        <?php } ?>
-                    </tr>
-                </tbody>
-            </table>
+                            <div class="flex items-center text-xs text-gray-500">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                Lokasi: <?php echo htmlspecialchars($activity['location'] ?? 'Akan Dimaklumkan'); ?>
+                            </div>
+                        </div>
+                
+                        <form action="../backend/process_join_activity.php" method="POST">
+                            <input type="hidden" name="activityID" value="<?php echo $activity['activityID']; ?>">
+                            <button type="submit" class="w-full py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+                                SERTAI SEKARANG
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <?php endwhile; ?>
+            </div>
         </section>
 
     </main>

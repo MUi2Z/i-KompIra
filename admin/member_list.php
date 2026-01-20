@@ -1,115 +1,102 @@
 <?php
-    include '../config/connection.php'; 
-    include '../src/components/header.php'; 
-    // include '../src/components/navbar.php';
+session_start();
+include '../config/connection.php';
+include '../src/components/header.php';
 
-    // 1. Sertakan sesi untuk semakan role (Optional tapi digalakkan)
-    session_start();
-    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-        // Jika bukan admin, tendang ke login atau home
-        header("Location: ../public/login.php"); exit();    
-    }
+// Kawalan Akses: Hanya Admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../public/login.php");
+    exit();
+}
 
-    // 2. Fetch data dari jadual member_profiles yang berstatus 'active'
-    // Kita gunakan profileID sebagai ID paparan
-    $sql = "SELECT profileID, fullName, NRIC, beatRoleType, status 
-            FROM members 
-            WHERE status = 'active' 
-            ORDER BY applied_at DESC";
-    
-    $result = $conn->query($sql);
-
-    $members = [];
-    if ($result && $result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $members[] = $row;
-        }
-    }
-    $conn->close();
+// Ambil data ahli yang berstatus 'active'
+$sql = "SELECT m.*, u.email 
+        FROM members m 
+        JOIN users u ON m.userID = u.userID 
+        WHERE m.status = 'active' 
+        ORDER BY m.fullName ASC";
+$result = $conn->query($sql);
 ?>
 
-    <div class="flex flex-col lg:flex-row min-h-screen bg-gray-50">
-        <?php include '../src/components/sidebar_admin.php'; ?>
+<div class="flex min-h-screen bg-gray-50">
+    <?php include '../src/components/sidebar_admin.php'; ?>
 
-        <main class="flex-1 p-6 lg:p-10">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-                <h1 class="text-3xl font-bold text-gray-800">Senarai Ahli Aktif</h1>
-                
-                <a href="pending_requests.php" class="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 transition">
-                    Semak Permohonan Baru
-                </a>
+    <main class="flex-1 p-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Senarai Ahli i-KompIra</h1>
+                <p class="text-gray-600 mt-1">Menguruskan maklumat ahli dan peranan mereka dalam kumpulan.</p>
             </div>
+            
+            <button onclick="toggleModal('addMemberModal', 'memberCard')" 
+                    class="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 transition-all transform hover:-translate-y-1">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Tambah Ahli Baru
+            </button>
+        </div>
 
-            <?php if (isset($_GET['message'])): ?>
-                <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded shadow-sm">
-                    <?php echo htmlspecialchars($_GET['message']); ?>
-                </div>
-            <?php endif; ?>
-
-            <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID PROFIL</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA PENUH</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO. KAD PENGENALAN</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">JENIS IRAMA</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">TINDAKAN</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Maklumat Ahli</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Program & Kohort</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Jenis Irama</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Tindakan</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php if (empty($members)): ?>
-                            <tr>
-                                <td colspan="5" class="px-6 py-8 whitespace-nowrap text-sm text-gray-500 text-center italic">Tiada ahli aktif ditemui dalam sistem.</td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($members as $member): ?>
-                                <tr class="hover:bg-gray-50 transition">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">#<?php echo htmlspecialchars($member['profileID']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900"><?php echo htmlspecialchars($member['fullName']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><?php echo htmlspecialchars($member['NRIC']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">
-                                            <?php echo htmlspecialchars($member['beatRoleType']); ?>
-                                        </span>
+                    <tbody class="divide-y divide-gray-200">
+                        <?php if ($result->num_rows > 0): ?>
+                            <?php while($row = $result->fetch_assoc()): ?>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 flex-shrink-0 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                                                <?php echo strtoupper(substr($row['fullName'], 0, 1)); ?>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($row['fullName']); ?></div>
+                                                <div class="text-xs text-gray-500"><?php echo htmlspecialchars($row['email']); ?></div>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button class="py-1.5 px-4 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 transition">PROFIL</button>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 text-xs font-medium bg-green-50 text-green-700 rounded-lg">
+                                            <?php echo htmlspecialchars($row['programme']); ?>
+                                        </span>
+                                        <div class="text-xs text-gray-500 mt-1">Tahun: <?php echo htmlspecialchars($row['kohort']); ?></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm text-gray-700 font-medium"><?php echo htmlspecialchars($row['beatRoleType']); ?></div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <div class="flex justify-center gap-3">
+                                            <a href="edit_member.php?id=<?php echo $row['userID']; ?>" class="text-blue-500 hover:text-blue-700 transition-all">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                            </a>
+                                            <a href="../backend/delete_member.php?id=<?php echo $row['userID']; ?>" 
+                                               onclick="return confirm('Padam ahli ini? Semua rekod berkaitan akan hilang.')"
+                                               class="text-red-400 hover:text-red-600 transition-all">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m4-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4" class="px-6 py-12 text-center text-gray-400 italic">Tiada ahli berdaftar ditemui.</td>
+                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
-
-                <div class="mt-8 flex justify-center">
-                    <button 
-                        id="openAddMemberModal"
-                        class="py-2.5 px-8 bg-green-600 text-white font-bold rounded-full shadow-lg hover:bg-green-700 hover:-translate-y-1 transition duration-200"
-                    >
-                        + TAMBAH AHLI
-                    </button>
-                </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
 
-<?php 
-    include '../src/components/add_member_modal.php'; 
-?>
-
-<script>
-    // Logic Toggle Modal
-    const modal = document.getElementById('addMemberModal');
-    const openBtn = document.getElementById('openAddMemberModal');
-    const closeBtn = document.getElementById('closeAddMemberModal');
-
-    openBtn.onclick = () => modal.classList.remove('hidden');
-    closeBtn.onclick = () => modal.classList.add('hidden');
-    
-    window.onclick = (e) => {
-        if (e.target === modal) modal.classList.add('hidden');
-    }
-</script>
+<?php include '../src/components/modal_add_member.php'; ?>
+<script src="../src/js/modal-logic.js"></script>
 
 <?php include '../src/components/footer.php'; ?>

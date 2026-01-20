@@ -1,4 +1,4 @@
-<?php $oof = 1;// include '../backend/connection.php'; ?>
+<?php include '../config/connection.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">

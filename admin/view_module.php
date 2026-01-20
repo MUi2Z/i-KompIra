@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/connection.php';
 
-// Check if user is admin
+// Semakan akses Admin
 if (!isset($_SESSION['userID']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../public/login.php");
     exit();
@@ -10,143 +10,129 @@ if (!isset($_SESSION['userID']) || $_SESSION['role'] !== 'admin') {
 
 $moduleID = $_GET['id'] ?? 0;
 
-// Fetch module details
-$sql = "SELECT * FROM modules WHERE moduleID = ?";
+// Ambil butiran modul dan email admin yang mencipta
+$sql = "SELECT m.*, u.email as creatorEmail 
+        FROM modules m 
+        JOIN users u ON m.userID = u.userID 
+        WHERE m.moduleID = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $moduleID);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header("Location: modules.php?status=error&message=Modul tidak ditemui");
+    header("Location: module_list.php?status=error&message=Modul tidak ditemui");
     exit();
 }
 
 $module = $result->fetch_assoc();
-
-include '../src/components/admin_header.php';
-// include '../src/components/admin_navbar.php';
+include '../src/components/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lihat Modul - i-KompIra</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50">
+<div class="flex min-h-screen bg-gray-50">
+    <?php include '../src/components/sidebar_admin.php'; ?>
     
-    <div class="flex">
-        <?php include '../src/components/sidebar_admin.php'; ?>
-        
-        <main class="flex-1 p-6 lg:p-10">
-            <div class="mb-6">
-                <a href="module_list.php" class="text-[#D4A259] hover:text-[#b88a4a] flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Kembali ke Senarai Modul
-                </a>
-            </div>
+    <main class="flex-1 p-6 lg:p-10">
+        <div class="mb-6">
+            <a href="module_list.php" class="text-blue-600 hover:text-blue-800 flex items-center font-medium">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Kembali ke Senarai Modul
+            </a>
+        </div>
 
-            <div class="bg-white rounded-xl shadow-md overflow-hidden max-w-4xl mx-auto">
-                <!-- Module Header -->
-                <div class="bg-[#D4A259] text-white p-6">
-                    <h1 class="text-2xl font-bold"><?php echo htmlspecialchars($module['moduleName']); ?></h1>
-                    <p class="text-white/90 mt-2">ID Modul: <?php echo htmlspecialchars($module['moduleID']); ?></p>
-                </div>
-                
-                <!-- Module Content -->
-                <div class="p-8">
-                    <div class="mb-8">
-                        <h2 class="text-lg font-bold text-gray-800 mb-3">Penerangan Modul</h2>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <p class="text-gray-700 whitespace-pre-line"><?php echo nl2br(htmlspecialchars($module['moduleDesc'])); ?></p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">Tarikh Dibuat</h3>
-                            <p class="text-gray-800"><?php echo date('d M Y, h:i A', strtotime($module['created_at'])); ?></p>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">Tarikh Dikemaskini</h3>
-                            <p class="text-gray-800">
-                                <?php echo isset($module['updated_at']) ? date('d M Y, h:i A', strtotime($module['updated_at'])) : 'Tiada kemaskini'; ?>
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Content Sections (if any) -->
-                    <div>
-                        <h2 class="text-lg font-bold text-gray-800 mb-4">Kandungan Modul</h2>
-                        <?php
-                        // Check if module has content
-                        $content_sql = "SELECT * FROM module_content WHERE moduleID = ? ORDER BY contentOrder";
-                        $content_stmt = $conn->prepare($content_sql);
-                        $content_stmt->bind_param("i", $moduleID);
-                        $content_stmt->execute();
-                        $content_result = $content_stmt->get_result();
-                        
-                        if ($content_result->num_rows > 0): ?>
-                            <div class="space-y-4">
-                                <?php while ($content = $content_result->fetch_assoc()): ?>
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <h3 class="font-medium text-gray-800"><?php echo htmlspecialchars($content['contentTitle']); ?></h3>
-                                                <p class="text-sm text-gray-500 mt-1"><?php echo htmlspecialchars($content['contentType']); ?></p>
-                                            </div>
-                                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                                                Bahagian <?php echo htmlspecialchars($content['contentOrder']); ?>
-                                            </span>
-                                        </div>
-                                        <?php if (!empty($content['contentDesc'])): ?>
-                                            <p class="text-gray-600 text-sm mt-2"><?php echo nl2br(htmlspecialchars($content['contentDesc'])); ?></p>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endwhile; ?>
-                            </div>
-                        <?php else: ?>
-                            <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg">
-                                <p>Tiada kandungan ditambah untuk modul ini.</p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                
-                <!-- Action Buttons -->
-                <div class="bg-gray-50 px-8 py-6 border-t">
-                    <div class="flex justify-end space-x-3">
-                        <a href="edit_module.php?id=<?php echo htmlspecialchars($module['moduleID']); ?>" 
-                           class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition">
-                            Edit Modul
-                        </a>
-                        <a href="add_content.php?module_id=<?php echo htmlspecialchars($module['moduleID']); ?>" 
-                           class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
-                            Tambah Kandungan
-                        </a>
-                        <a href="modules.php" 
-                           class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">
-                            Kembali ke Senarai
-                        </a>
-                    </div>
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mx-auto border border-gray-100">
+            <div class="relative h-48 bg-gradient-to-r from-blue-700 to-indigo-800 p-8 flex items-end">
+                <div class="z-10">
+                    <span class="px-3 py-1 bg-white/20 text-white text-xs font-bold rounded-full uppercase tracking-wider backdrop-blur-sm">
+                        Modul Pembelajaran
+                    </span>
+                    <h1 class="text-3xl font-bold text-white mt-2"><?php echo htmlspecialchars($module['moduleName']); ?></h1>
                 </div>
             </div>
-        </main>
-    </div>
+            
+            <div class="p-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="lg:col-span-2 space-y-8">
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                                <span class="w-2 h-6 bg-blue-600 rounded-full mr-3"></span>
+                                Penerangan Modul
+                            </h2>
+                            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                <p class="text-gray-700 leading-relaxed whitespace-pre-line">
+                                    <?php echo nl2br(htmlspecialchars($module['moduleDesc'])); ?>
+                                </p>
+                            </div>
+                        </div>
 
-    <script>
-        function deleteModule(moduleID) {
-            if (confirm('Adakah anda pasti ingin memadam modul ini?')) {
-                window.location.href = 'delete_module.php?id=' + moduleID;
-            }
-        }
-    </script>
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-800 mb-3">Dokumen Lampiran</h2>
+                            <div class="flex items-center p-4 bg-white border-2 border-dashed border-gray-200 rounded-2xl hover:border-blue-300 transition-colors">
+                                <div class="p-3 bg-red-100 rounded-lg text-red-600 mr-4">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-gray-800">Fail Modul (PDF/DOCX)</p>
+                                    <p class="text-xs text-gray-500"><?php echo htmlspecialchars($module['moduleDocs']); ?></p>
+                                </div>
+                                <a href="../uploads/modules/docs/<?php echo $module['moduleDocs']; ?>" target="_blank" 
+                                   class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition">
+                                    Buka Fail
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-    <?php include '../src/components/footer.php'; ?>
-</body>
-</html>
+                    <div class="space-y-6">
+                        <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
+                            <p class="p-3 text-xs font-bold text-gray-500 bg-gray-50 border-b">Thumbnail Modul</p>
+                            <img src="../uploads/modules/thumbs/<?php echo $module['moduleThumbnail']; ?>" 
+                                 alt="Thumbnail" class="w-full h-40 object-cover">
+                        </div>
+
+                        <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 space-y-4">
+                            <div>
+                                <h3 class="text-xs font-bold text-gray-400 uppercase">Dicipta Oleh</h3>
+                                <p class="text-sm font-bold text-gray-800"><?php echo htmlspecialchars($module['creatorEmail']); ?></p>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-bold text-gray-400 uppercase">Tarikh Dibuat</h3>
+                                <p class="text-sm text-gray-700"><?php echo date('d M Y, h:i A', strtotime($module['createdAt'])); ?></p>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-bold text-gray-400 uppercase">Kemaskini Terakhir</h3>
+                                <p class="text-sm text-gray-700"><?php echo date('d M Y, h:i A', strtotime($module['updatedAt'])); ?></p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-3">
+                            <a href="edit_module.php?id=<?php echo $module['moduleID']; ?>" 
+                               class="flex justify-center items-center px-4 py-3 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition shadow-lg shadow-amber-100">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                Edit Modul
+                            </a>
+                            <button onclick="deleteModule(<?php echo $module['moduleID']; ?>)" 
+                               class="px-4 py-3 bg-white text-red-500 font-bold rounded-xl border border-red-100 hover:bg-red-50 transition">
+                                Padam Modul
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+function deleteModule(id) {
+    if (confirm('Adakah anda pasti ingin memadam modul ini? Semua fail berkaitan akan dihapuskan.')) {
+        window.location.href = '../backend/process_delete_module.php?id=' + id;
+    }
+}
+</script>
+
+<?php include '../src/components/footer.php'; ?>

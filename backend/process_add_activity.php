@@ -15,13 +15,13 @@
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        $activityTittle  = trim($_POST['activityTittle'] ?? '');
+        $activityTitle  = trim($_POST['activityTitle'] ?? '');
         $activityDesc   = trim($_POST['activityDesc'] ?? '');
         $userID         = (int)($_POST['userID'] ?? 0); 
         $thumbnailPath  = NULL; // Akan menyimpan path fail yang dimuat naik
 
         // Validasi Asas
-        if (empty($activityTittle) || empty($activityDesc) || $userID == 0) {
+        if (empty($activityTitle) || empty($activityDesc) || $userID == 0) {
             $message = urlencode("Sila lengkapkan semua medan yang diperlukan.");
             header("Location: ../admin/activity_list.php?status=error&message=$message");
             exit();
@@ -64,21 +64,21 @@
         // ===================================
         // 2. Masukkan Data ke Pangkalan Data
         // ===================================
-        $sql = "INSERT INTO activities (activityTittle, activityDesc, activityThumbnail, createdAt, updatedAt, userID) 
+        $sql = "INSERT INTO activities (activityTitle, activityDesc, activityThumbnail, createdAt, updatedAt, userID) 
                 VALUES (?, ?, ?, NOW(), NOW(), ?)";
 
         if ($stmt = $conn->prepare($sql)) {
 
             // Ikat pemboleh ubah: 3 string, 1 integer
             $stmt->bind_param("sssi", 
-                $activityTittle, 
+                $activityTitle, 
                 $activityDesc, 
                 $thumbnailPath, // Simpan path fail yang dimuat naik
                 $userID 
             );
 
             if ($stmt->execute()) {
-                $message = urlencode("Aktiviti '$activityTittle' telah berjaya ditambahkan.");
+                $message = urlencode("Aktiviti '$activityTitle' telah berjaya ditambahkan.");
                 header("Location: ../admin/activity_list.php?status=success&message=$message");
             } else {
                 // Jika ralat DB, padam fail yang dimuat naik (rollback manual)

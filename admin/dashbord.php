@@ -201,7 +201,7 @@
                                     <div class="p-4 border border-gray-200 rounded-lg">
                                         <div class="flex justify-between items-start">
                                             <div>
-                                                <h3 class="font-medium text-gray-800"><?php echo htmlspecialchars($activity['activityTittle']); ?></h3>
+                                                <h3 class="font-medium text-gray-800"><?php echo htmlspecialchars($activity['activityTitle']); ?></h3>
                                                 <p class="text-sm text-gray-600 mt-1"><?php echo htmlspecialchars($activity['activityDesc'] ?? 'Tiada deskripsi'); ?></p>
                                             </div>
                                             <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">

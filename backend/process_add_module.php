@@ -1,147 +1,108 @@
 <?php
-// process_add_module.php
-
-// Sertakan fail sambungan
+session_start();
 include '../config/connection.php'; 
 
-// Tetapan direktori muat naik
-$thumbnail_dir = "../uploads/modules/thumbnails/"; 
-$docs_dir = "../uploads/modules/documents/";
+// Tetapan direktori (Pastikan path ini betul mengikut struktur folder anda)
+$thumbnail_dir = "../uploads/modules/thumbs/"; 
+$docs_dir      = "../uploads/modules/docs/";
 
 // Pastikan direktori muat naik wujud
 if (!is_dir($thumbnail_dir)) { mkdir($thumbnail_dir, 0777, true); }
 if (!is_dir($docs_dir)) { mkdir($docs_dir, 0777, true); }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $moduleName     = trim($_POST['moduleName'] ?? '');
-    $moduleDesc     = trim($_POST['moduleDesc'] ?? '');
-    $userID         = (int)($_POST['userID'] ?? 0); 
-    $thumbnailPath  = NULL;
-    $docsPath       = NULL;
-    $errorRedirect  = "Location: ../admin/module_list.php?status=error&message=";
+    $moduleName    = trim($_POST['moduleName'] ?? '');
+    $moduleDesc    = trim($_POST['moduleDesc'] ?? '');
+    $userID        = (int)($_POST['userID'] ?? 0); 
+    $errorRedirect = "Location: ../admin/module_list.php?status=error&message=";
 
-
-    // Validasi Asas
+    // 1. Validasi Input Asas
     if (empty($moduleName) || empty($moduleDesc) || $userID == 0) {
         header($errorRedirect . urlencode("Sila lengkapkan semua medan yang diperlukan."));
         exit();
     }
-    
-    // ===================================
-    // 1. Fungsi Bantuan Muat Naik Fail
-    // ===================================
 
-    /**
-     * Mengendalikan pemprosesan muat naik satu fail
-     * @param array $fileArray $_FILES array untuk fail tertentu
-     * @param string $targetDir Direktori untuk menyimpan fail
-     * @param array $allowedTypes Jenis fail yang dibenarkan (extensions)
-     * @param int $maxSize Saiz maksimum fail dalam bytes
-     * @param string $prefix Prefix untuk nama fail unik
-     * @return string|false Path fail yang berjaya dimuat naik atau FALSE jika gagal
-     */
+    // ===================================
+    // 2. Fungsi Pengendalian Muat Naik
+    // ===================================
     function handleFileUpload($fileArray, $targetDir, $allowedTypes, $maxSize, $prefix) {
-    if ($fileArray["error"] !== UPLOAD_ERR_OK) {
-        return ['success' => false, 'message' => "Ralat sistem muat naik."];
-    }
+        if (!isset($fileArray) || $fileArray["error"] !== UPLOAD_ERR_OK) {
+            return ['success' => false, 'message' => "Fail tidak dikesan atau ralat sistem."];
+        }
 
-    $fileType = strtolower(pathinfo($fileArray["name"], PATHINFO_EXTENSION));
-    
-    if ($fileArray["size"] > $maxSize) {
-        return ['success' => false, 'message' => "Saiz fail terlalu besar."];
-    }
-    if (!in_array($fileType, $allowedTypes)) {
-        return ['success' => false, 'message' => "Jenis fail tidak dibenarkan."];
-    }
+        $fileType = strtolower(pathinfo($fileArray["name"], PATHINFO_EXTENSION));
+        
+        if ($fileArray["size"] > $maxSize) {
+            return ['success' => false, 'message' => "Saiz fail melebihi had yang dibenarkan."];
+        }
+        if (!in_array($fileType, $allowedTypes)) {
+            return ['success' => false, 'message' => "Format .$fileType tidak dibenarkan."];
+        }
 
-    $uniqueFilename = uniqid($prefix . '_', true) . '.' . $fileType;
-    $target_file = $targetDir . $uniqueFilename;
+        // Simpan hanya nama fail unik dalam DB
+        $uniqueFilename = uniqid($prefix . '_', true) . '.' . $fileType;
+        $destination = $targetDir . $uniqueFilename;
 
-    if (move_uploaded_file($fileArray["tmp_name"], $target_file)) {
-        // Jika berjaya, pulangkan success = true dan path
-        return ['success' => true, 'path' => $target_file];
-    } else {
-        return ['success' => false, 'message' => "Gagal memindahkan fail ke folder."];
+        if (move_uploaded_file($fileArray["tmp_name"], $destination)) {
+            return ['success' => true, 'filename' => $uniqueFilename];
+        } else {
+            return ['success' => false, 'message' => "Gagal menyimpan fail ke pelayan."];
+        }
     }
-}
-
 
     // ===================================
-    // 2. Proses Muat Naik Thumbnail
+    // 3. Proses Muat Naik
     // ===================================
-    $thumbnailResult = handleFileUpload(
-        $_FILES["moduleThumbnail"], 
-        $thumbnail_dir, 
-        ['jpg', 'jpeg', 'png', 'gif'], 
-        5000000, 
-        'thumb'
-    );
-    
-    if (!$thumbnailResult['success']) {
-        header($errorRedirect . urlencode("Ralat Thumbnail: " . $thumbnailResult['message']));
+
+    // Muat naik Thumbnail (Had 5MB)
+    $thumbRes = handleFileUpload($_FILES["moduleThumbnail"], $thumbnail_dir, ['jpg', 'jpeg', 'png'], 5000000, 'thumb');
+    if (!$thumbRes['success']) {
+        header($errorRedirect . urlencode("Ralat Imej: " . $thumbRes['message']));
         exit();
     }
-    $thumbnailPath = $thumbnailResult['path']; // Ambil path jika berjaya
-    
-    
-    // ===================================
-    // 3. Proses Muat Naik Dokumen
-    // ===================================
-    $docsResult = handleFileUpload(
-        $_FILES["moduleDocs"], 
-        $docs_dir, 
-        ['pdf', 'doc', 'docx'], 
-        10000000, 
-        'doc'
-    );
-    
-    if (!$docsResult['success']) {
-        if (file_exists($thumbnailPath)) { unlink($thumbnailPath); }
-        header($errorRedirect . urlencode("Ralat Dokumen: " . $docsResult['message']));
+
+    // Muat naik Dokumen (Had 10MB)
+    $docsRes = handleFileUpload($_FILES["moduleDocs"], $docs_dir, ['pdf', 'doc', 'docx'], 10000000, 'doc');
+    if (!$docsRes['success']) {
+        // Padam semula thumbnail jika dokumen gagal
+        if (file_exists($thumbnail_dir . $thumbRes['filename'])) { unlink($thumbnail_dir . $thumbRes['filename']); }
+        header($errorRedirect . urlencode("Ralat Dokumen: " . $docsRes['message']));
         exit();
     }
-    $docsPath = $docsResult['path']; // Ambil path jika berjaya
-
 
     // ===================================
-    // 4. Masukkan Data ke Pangkalan Data
+    // 4. Simpan ke Database (Struktur Baru)
     // ===================================
-    $sql = "INSERT INTO modules (moduleName, moduleDesc, moduleThumbnail, moduleDocs, created_at, updated_at, userID) 
+    
+    // Gunakan nama kolum createdAt & updatedAt mengikut cadangan struktur tadi
+    $sql = "INSERT INTO modules (moduleName, moduleDesc, moduleThumbnail, moduleDocs, createdAt, updatedAt, userID) 
             VALUES (?, ?, ?, ?, NOW(), NOW(), ?)";
     
     if ($stmt = $conn->prepare($sql)) {
-        
-        // Ikat pemboleh ubah: 4 string, 1 integer
         $stmt->bind_param("ssssi", 
             $moduleName, 
             $moduleDesc, 
-            $thumbnailPath, 
-            $docsPath, 
+            $thumbRes['filename'], 
+            $docsRes['filename'], 
             $userID 
         );
         
         if ($stmt->execute()) {
-            $message = urlencode("Modul '$moduleName' telah berjaya ditambahkan.");
-            header("Location: ../admin/module_list.php?status=success&message=$message");
+            header("Location: ../admin/module_list.php?status=success&message=" . urlencode("Modul berjaya ditambah!"));
         } else {
-            // Jika ralat DB, padam kedua-dua fail yang dimuat naik
-            if (file_exists($thumbnailPath)) { unlink($thumbnailPath); }
-            if (file_exists($docsPath)) { unlink($docsPath); }
-            header($errorRedirect . urlencode("Ralat pangkalan data: " . $stmt->error));
+            // Padam fail jika DB gagal
+            unlink($thumbnail_dir . $thumbRes['filename']);
+            unlink($docs_dir . $docsRes['filename']);
+            header($errorRedirect . urlencode("Ralat DB: " . $stmt->error));
         }
-
         $stmt->close();
-        
     } else {
-        header($errorRedirect . urlencode("Ralat SQL (Prepare): " . $conn->error));
+        header($errorRedirect . urlencode("Ralat SQL Prepare."));
     }
 
     $conn->close();
-
 } else {
     header("Location: ../admin/module_list.php");
     exit();
 }
-?>
