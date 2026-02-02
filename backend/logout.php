@@ -1,14 +1,9 @@
 <?php
-    // Mulakan sesi untuk akses data sesi sedia ada
-    session_start();
-    
-    // Kosongkan semua pembolehubah sesi
-    $_SESSION = array();
-    
-    // Musnahkan sesi di server
-    session_destroy();
-    
-    // Redirect ke halaman utama (index.php)
-    header("Location: ../public/index.php");
-    exit();
+session_start();
+session_unset(); // Kosongkan semua pembolehubah sesi
+session_destroy(); // Musnahkan sesi sepenuhnya
+
+// Redirect ke halaman utama
+header("Location: ../public/index.php");
+exit();
 ?>

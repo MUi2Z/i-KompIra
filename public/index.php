@@ -19,13 +19,12 @@ $activitiesResult = $conn->query($activitiesSql);
 
     <main class="container mx-auto py-12 px-4 md:px-8 lg:px-12">
 
-        <!-- Slideshow Carousel Section -->
-        <div id="hero" class="relative border-8 rounded-2xl border-[#E7D8B8]" data-carousel="slide">
-            <!-- Carousel wrapper: Changed w-4/6 to w-full for better layout -->
-            <div id="activityCarousel" class="relative w-full overflow-hidden rounded-2xl shadow-lg h-[400px]">
+    <!-- Slideshow Carousel Section -->
+        <div id="hero" class="relative border-8 rounded-2xl border-[#E7D8B8] overflow-hidden group" data-carousel="slide">
+            <div class="relative h-64 overflow-hidden rounded-lg md:h-[400px]">
                 <?php if ($carouselResult && $carouselResult->num_rows > 0): ?>
-                    <?php $first = true; foreach ($carouselResult as $row): ?>
-                        <div class="carousel-item <?php echo $first ? 'active' : 'hidden'; ?> duration-700 ease-in-out">
+                    <?php $count = 0; while($row = $carouselResult->fetch_assoc()): ?>
+                        <div class="<?php echo ($count == 0) ? 'block' : 'hidden'; ?> duration-700 ease-in-out carousel-item" data-carousel-item="<?php echo ($count == 0) ? 'active' : ''; ?>">
                             <img src="../uploads/activities/<?php echo $row['activityThumbnail']; ?>" 
                                  class="absolute block w-full h-full object-cover" 
                                  alt="<?php echo htmlspecialchars($row['activityTitle']); ?>">
@@ -33,31 +32,25 @@ $activitiesResult = $conn->query($activitiesSql);
                                 <h2 class="text-xl font-bold"><?php echo htmlspecialchars($row['activityTitle']); ?></h2>
                             </div>
                         </div>
-                    <?php $first = false; endforeach; ?>
+                    <?php $count++; endwhile; ?>
                 <?php else: ?>
-                    <img src="../assets/img/hero-bg.jpg" class="w-full h-full object-cover" alt="Welcome">
+                    <div class="block duration-700 ease-in-out carousel-item" data-carousel-item="active">
+                        <img src="../assets/img/hero-bg.jpg" class="absolute block w-full h-full object-cover" alt="Welcome">
+                    </div>
                 <?php endif; ?>
             </div>
-        <section class="relative bg-white/50 p-6 rounded-xl shadow-xl">
-                <!-- Slider controls -->
-                <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full group-hover:bg-amber-200/80 group-focus:ring-white group-focus:outline-none">
-                        <svg class="w-4 h-4 text-orange-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                        </svg>
-                        <span class="sr-only">Previous</span>
-                    </span>
-                </button>
-                <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full group-hover:bg-yellow-200/80 group-focus:ring-white group-focus:outline-none">
-                        <svg class="w-4 h-4 text-orange-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                        </svg>
-                        <span class="sr-only">Next</span>
-                    </span>
-                </button>
-            </div>
-        </section>
+
+            <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-amber-200/50">
+                    <svg class="w-4 h-4 text-orange-800" fill="none" viewBox="0 0 6 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/></svg>
+                </span>
+            </button>
+            <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-amber-200/50">
+                    <svg class="w-4 h-4 text-orange-800" fill="none" viewBox="0 0 6 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/></svg>
+                </span>
+            </button>
+        </div>
 
         <!-- Activity Cards Section -->
         <section class="mt-10">            
@@ -88,10 +81,10 @@ $activitiesResult = $conn->query($activitiesSql);
                                 Lokasi: <?php echo htmlspecialchars($activity['location'] ?? 'Akan Dimaklumkan'); ?>
                             </div>
                         </div>
-                
-                        <form action="../backend/process_join_activity.php" method="POST">
+
+                        <form action="../backend/process_join_activity.php" method="POST" class="text-right">
                             <input type="hidden" name="activityID" value="<?php echo $activity['activityID']; ?>">
-                            <button type="submit" class="w-full py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+                            <button type="submit" class="w-1/2 py-2 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-lg transition-colors duration-300 ease-in-out">
                                 SERTAI SEKARANG
                             </button>
                         </form>

@@ -11,7 +11,7 @@ $currentUserID = $_SESSION['userID'];
 
 // Query untuk senarai aktiviti dan semak jika user dah join atau belum
 $sql = "SELECT a.*, 
-        (SELECT COUNT(*) FROM activity_participations WHERE activityID = a.activityID AND userID = $currentUserID) as is_joined
+        (SELECT COUNT(*) FROM participations WHERE activityID = a.activityID AND userID = $currentUserID) as is_joined
         FROM activities a";
 $result = $conn->query($sql);
 ?>
@@ -25,7 +25,7 @@ $result = $conn->query($sql);
         <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
             <img src="<?php echo $activity['activityThumbnail']; ?>" class="w-full h-48 object-cover">
             <div class="p-5">
-                <h3 class="text-xl font-bold mb-2"><?php echo $activity['activityTittle']; ?></h3>
+                <h3 class="text-xl font-bold mb-2"><?php echo $activity['activityTitle']; ?></h3>
                 <p class="text-gray-600 text-sm mb-4"><?php echo substr($activity['activityDesc'], 0, 100); ?>...</p>
                 
                 <?php if($activity['is_joined'] > 0): ?>
