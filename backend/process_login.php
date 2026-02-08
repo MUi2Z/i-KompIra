@@ -23,10 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['userID'] = $user['userID'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['role'] = $user['role'];
+            $_SESSION['username'] = $user['userName'];
 
             // 4. Redirect mengikut Role
             if ($user['role'] === 'admin') {
-                header("Location: ../admin/dashbord.php");
+                header("Location: ../admin/dashboard.php");
             } elseif ($user['role'] === 'member') {
                 header("Location: ../member/profile.php");
             } else {

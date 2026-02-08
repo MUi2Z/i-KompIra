@@ -21,7 +21,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header("Location: module_list.php?status=error&message=Modul tidak ditemui");
+    header("Location: modules.php?status=error&message=Modul tidak ditemui");
     exit();
 }
 
@@ -34,7 +34,7 @@ include '../src/components/header.php';
     
     <main class="flex-1 p-6 lg:p-10">
         <div class="mb-6">
-            <a href="module_list.php" class="text-blue-600 hover:text-blue-800 flex items-center font-medium">
+            <a href="modules.php" class="text-blue-600 hover:text-blue-800 flex items-center font-medium">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
@@ -109,11 +109,16 @@ include '../src/components/header.php';
                         </div>
 
                         <div class="grid grid-cols-1 gap-3">
-                            <a href="edit_module.php?id=<?php echo $module['moduleID']; ?>" 
-                               class="flex justify-center items-center px-4 py-3 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition shadow-lg shadow-amber-100">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <button onclick='openEditModal("editModuleModal", "editModuleCard", {
+                                moduleID: "<?php echo $module['moduleID']; ?>",
+                                moduleName: "<?php echo addslashes($module['moduleName']); ?>",
+                                moduleDesc: "<?php echo addslashes($module['moduleDesc']); ?>"
+                            })' class="w-full flex justify-center items-center px-4 py-3 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition shadow-lg shadow-amber-100">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
                                 Edit Modul
-                            </a>
+                            </button>
                             <button onclick="deleteModule(<?php echo $module['moduleID']; ?>)" 
                                class="px-4 py-3 bg-white text-red-500 font-bold rounded-xl border border-red-100 hover:bg-red-50 transition">
                                 Padam Modul
@@ -130,9 +135,13 @@ include '../src/components/header.php';
 <script>
 function deleteModule(id) {
     if (confirm('Adakah anda pasti ingin memadam modul ini? Semua fail berkaitan akan dihapuskan.')) {
-        window.location.href = '../backend/process_delete_module.php?id=' + id;
+        window.location.href = '../backend/delete_module.php?id=' + id;
     }
 }
 </script>
+
+<?php include '../src/components/modal_add_module.php'; ?>
+<?php include '../src/components/modal_edit_module.php'; ?>
+<script src="../src/js/modal-logic.js"></script>
 
 <?php include '../src/components/footer.php'; ?>

@@ -33,12 +33,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Jika semua OK, commit
         $conn->commit();
-        header("Location: ../admin/member_list.php?status=success&message=Ahli baru berjaya didaftarkan");
+        header("Location: ../admin/members.php?status=success&message=Ahli baru berjaya didaftarkan");
 
     } catch (Exception $e) {
         // Jika ralat, batalkan semua (rollback)
         $conn->rollback();
-        header("Location: ../admin/member_list.php?status=error&message=Gagal daftar: " . $e->getMessage());
+        header("Location: ../admin/members.php?status=error&message=Gagal daftar: " . $e->getMessage());
     }
 }
 ?>

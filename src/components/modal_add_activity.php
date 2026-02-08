@@ -9,6 +9,7 @@
         <div class="p-6 max-h-[80vh] overflow-y-auto">
             <form action="../backend/process_add_activity.php" method="POST" enctype="multipart/form-data">
                 <div class="space-y-5">
+                    <input type="hidden" name="userID" value="<?php echo $_SESSION['userID']; ?>">
                     <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Tajuk Aktiviti</label>
                         <input type="text" name="activityTitle" required class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all">

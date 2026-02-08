@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include '../config/connection.php';
 include '../src/components/header.php';
+include '../src/components/navbar.php';
 
 // Kawalan Akses: Hanya Admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {

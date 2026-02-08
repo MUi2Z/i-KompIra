@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $moduleName    = trim($_POST['moduleName'] ?? '');
     $moduleDesc    = trim($_POST['moduleDesc'] ?? '');
     $userID        = (int)($_POST['userID'] ?? 0); 
-    $errorRedirect = "Location: ../admin/module_list.php?status=error&message=";
+    $errorRedirect = "Location: ../admin/modules.php?status=error&message=";
 
     // 1. Validasi Input Asas
     if (empty($moduleName) || empty($moduleDesc) || $userID == 0) {
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         );
         
         if ($stmt->execute()) {
-            header("Location: ../admin/module_list.php?status=success&message=" . urlencode("Modul berjaya ditambah!"));
+            header("Location: ../admin/modules.php?status=success&message=" . urlencode("Modul berjaya ditambah!"));
         } else {
             // Padam fail jika DB gagal
             unlink($thumbnail_dir . $thumbRes['filename']);
@@ -103,6 +103,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $conn->close();
 } else {
-    header("Location: ../admin/module_list.php");
+    header("Location: ../admin/modules.php");
     exit();
 }

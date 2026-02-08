@@ -16,6 +16,11 @@ $modulesResult = $conn->query($modulesSql);
         <h2 class="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#D4A259] pl-4">Video Tutorial Utama</h2>
         <div class="aspect-video w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border-4 border-[#E7D8B8]">
             <iframe class="w-full h-full" src="../src/vid/komp 1.mp4" title="Tutorial Kompira" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>           
+        <div class="mt-auto pt-4 border-t border-gray-50 flex items-center text-center justify-center">
+            <button onclick="window.location='../public/beatPlayer.php'" type="submit" class="bg-orange-700/80 hover:bg-orange-700 text-white font-extrabold py-3 px-10 rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-105 uppercase tracking-wider">
+                KE HALAMAN INTERAKTIF
+            </button>
         </div>
     </section>
 

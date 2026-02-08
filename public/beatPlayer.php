@@ -1,10 +1,12 @@
 <?php
     include '../src/components/header.php';
+    include '../src/components/navbar.php';
 ?>
+
 <div class="flex flex-col items-center justify-center min-h-screen text-[#e2d1c3] font-serif overflow-hidden select-none">
 
     <div id="overlay" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center flex-col gap-6">
-        <h2 class="text-4xl font-bold text-[#d4a373] tracking-tighter">THE CRAFTSMAN'S DRUM</h2>
+        <h2 class="text-4xl font-bold text-[#d4a373] tracking-tighter">Kompang Interaktif</h2>
         <div class="flex gap-4">
             <button onclick="startGame('basic')" class="bg-[#7f5539] hover:bg-[#a98467] px-8 py-4 rounded border-b-4 border-[#432818] font-bold uppercase transition-all">Basic Mode (Constant)</button>
             <button onclick="startGame('free')" class="bg-[#d4a373] hover:bg-[#e6ccb2] text-[#2c1b0e] px-8 py-4 rounded border-b-4 border-[#7f5539] font-bold uppercase transition-all">Free Mode (Smooth)</button>
@@ -12,24 +14,24 @@
     </div>
 
     <div class="text-center mb-8">
-        <h1 id="mode-title" class="text-5xl font-black text-[#d4a373] drop-shadow-lg">Timber Beat</h1>
+        <h1 id="mode-title" class="text-5xl font-black text-[#d4a373] drop-shadow-lg">--:--</h1>
         <p class="uppercase tracking-widest text-sm text-[#a98467] mt-2">Score: <span id="score" class="text-3xl text-[#ffb703]">0</span></p>
     </div>
 
-    <div id="game-circle" class="relative w-80 h-80 rounded-full border-8 border-[#432818] bg-[#582f0e] shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
+    <div id="game-circle" class="relative w-80 h-80 rounded-full border-8 border-[#432818] bg-[#dba273] shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-black/20 pointer-events-none"></div>
         
-        <div class="absolute top-0 w-full h-1/2 border-b border-[#432818]/30 flex items-start justify-center pt-4 opacity-20 text-[10px] font-bold">SNARE HALF</div>
-        <div class="absolute bottom-0 w-full h-1/2 flex items-end justify-center pb-4 opacity-20 text-[10px] font-bold">KICK HALF</div>
+        <div class="absolute top-20  w-full h-1/2 border-b border-[#432818]/30 flex items-start justify-center pt-4 opacity-60 text-[10px] font-bold text-orange-900">Pukulan Dalam (Pak)</div>
+        <div class="absolute bottom-0 w-full h-1/2 flex items-end justify-center pb-4 opacity-60 text-[10px] font-bold text-orange-900">Pukulan Tepi (Tung)</div>
 
-        <div id="indicator" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 bg-gradient-to-br from-[#ffdc73] via-[#ffb703] to-[#8c6a00] rounded-full shadow-[0_0_20px_#ffb703] border border-white/30 z-20"></div>
+        <div id="indicator" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 bg-gradient-to-br from-[#816c2c] via-[#b6943f] to-[#5e4a0e] rounded-full shadow-[0_0_20px_#ffb703] border border-white/70 z-20"></div>
     </div>
 
     <div class="mt-12 flex flex-col items-center gap-2">
-        <div id="controls-hint" class="text-orange-800 text-xs font-bold uppercase tracking-[0.2em]">Spacebar to Play</div>
+        <div id="controls-hint" class="text-orange-800 text-xs font-bold uppercase tracking-[0.2em]">Butang 'Space' Untuk Pukulan</div>
         <div class="flex gap-4 opacity-40">
-            <div class="w-8 h-8 border border-[#7f5539] flex items-center justify-center rounded">W</div>
-            <div class="w-8 h-8 border border-[#7f5539] flex items-center justify-center rounded">S</div>
+            <div class="w-8 h-8 border border-[#7f5539] text-red-800 flex items-center justify-center rounded">W</div>
+            <div class="w-8 h-8 border border-[#7f5539] text-red-800 flex items-center justify-center rounded">S</div>
         </div>
     </div>
 
@@ -48,17 +50,17 @@
         let velocity = 0;
         let direction = 1; // 1 for down, -1 for up
         
-        const speed = 3.5; // Constant speed for Basic Mode
-        const acceleration = 1; // How fast it picks up speed in Free Mode
+        const speed = 6.5; // Constant speed for Basic Mode
+        const acceleration = 3; // How fast it picks up speed in Free Mode
         const friction = 0.7; // How fast it slows down in Free Mode
-        const maxLimit = 135; // Don't hit the wood!
+        const maxLimit = 125; // Don't hit the wood!
 
         const keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
 
         function startGame(mode) {
             gameMode = mode;
             document.getElementById('overlay').style.display = 'none';
-            document.getElementById('mode-title').innerText = mode === 'free' ? 'Free Session' : 'Steady Beat';
+            document.getElementById('mode-title').innerText = mode === 'free' ? 'Mod Pukulan Bebas' : 'Mod Pukulan Berentak';
             requestAnimationFrame(update);
         }
 

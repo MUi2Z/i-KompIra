@@ -1,5 +1,5 @@
 <?php
-include '../config/connection.php';
+include_once '../config/connection.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['userID'])) {

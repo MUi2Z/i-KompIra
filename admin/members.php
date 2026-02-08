@@ -1,6 +1,7 @@
 <?php
 session_start();
-include '../config/connection.php';
+include_once '../config/connection.php';
+include '../src/components/navbar.php';
 include '../src/components/header.php';
 
 // Kawalan Akses: Hanya Admin
@@ -18,7 +19,13 @@ $sql = "SELECT m.*, u.email
 $result = $conn->query($sql);
 ?>
 
-<div class="flex min-h-screen bg-gray-50">
+<?php if (isset($_GET['status'])): ?>
+    <div class="mb-4 p-4 rounded-xl <?php echo $_GET['status'] == 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'; ?> border border-current opacity-90">
+        <?php echo htmlspecialchars($_GET['message']); ?>
+    </div>
+<?php endif; ?>
+
+<div class="flex min-h-screen">
     <?php include '../src/components/sidebar_admin.php'; ?>
 
     <main class="flex-1 p-8">
@@ -72,9 +79,20 @@ $result = $conn->query($sql);
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         <div class="flex justify-center gap-3">
-                                            <a href="edit_member.php?id=<?php echo $row['userID']; ?>" class="text-blue-500 hover:text-blue-700 transition-all">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                                            </a>
+                                            <button onclick='openEditModal("editMemberModal", "editMemberCard", {
+                                                profileID: "<?php echo $row['profileID']; ?>",
+                                                userID: "<?php echo $row['userID']; ?>",
+                                                fullName: "<?php echo addslashes($row['fullName']); ?>",
+                                                email: "<?php echo $row['email']; ?>",
+                                                NRIC: "<?php echo $row['NRIC']; ?>",
+                                                kohort: "<?php echo $row['kohort']; ?>",
+                                                programme: "<?php echo $row['programme']; ?>",
+                                                beatRoleType: "<?php echo $row['beatRoleType']; ?>"
+                                            })' class="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 rounded-lg transition-all" title="Edit Ahli">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </button>
                                             <a href="../backend/delete_member.php?id=<?php echo $row['userID']; ?>" 
                                                onclick="return confirm('Padam ahli ini? Semua rekod berkaitan akan hilang.')"
                                                class="text-red-400 hover:text-red-600 transition-all">
@@ -97,6 +115,7 @@ $result = $conn->query($sql);
 </div>
 
 <?php include '../src/components/modal_add_member.php'; ?>
+<?php include '../src/components/modal_edit_member.php'; ?>
 <script src="../src/js/modal-logic.js"></script>
 
 <?php include '../src/components/footer.php'; ?>

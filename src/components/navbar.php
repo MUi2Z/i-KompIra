@@ -3,27 +3,44 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 1. Tentukan status default sebagai Guest
+// 1. Tentukan status default
 $displayRole = "Guest";
 $isLoggedIn = false;
+$profileRedirect = "../public/login.php";
 
 // 2. Semak jika pengguna sudah login
 if (isset($_SESSION['userID'])) {
     $isLoggedIn = true;
     $uID = $_SESSION['userID'];
     
-    // Ambil role terkini dari database menggunakan Prepared Statement
-    $stmt = $conn->prepare("SELECT role FROM users WHERE userID = ?");
+    $stmt = $conn->prepare("SELECT role, userName, email FROM users WHERE userID = ?");
     $stmt->bind_param("i", $uID);
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($user = $result->fetch_assoc()) {
-        $displayRole = ucfirst($user['role']); // Papar Admin, Member, atau User
+        $displayRole = ucfirst($user['role']); 
+        $displayName = $user['userName'];
+        $email = $user['email'];
+
+        // Typo Fix: dashbord.php -> dashboard.php
+        if ($displayRole == 'Admin') {
+            $profileRedirect = '../admin/dashboard.php';
+        }
+        elseif ($displayRole == 'Member' || $displayRole == 'User') {
+            $profileRedirect = "../member/profile.php";
+        }
     }
+} else {
+    $displayName = "Tetamu";
 }
+
+// --- LOGIK SEMBUNYI NAVBAR ---
+// Semak jika URL mengandungi folder '/admin/'
+$isAdminFolder = (strpos($_SERVER['PHP_SELF'], '/admin/') !== false);
 ?>
 
+<?php if (!$isAdminFolder): // Hanya papar jika BUKAN dalam folder admin ?>
 <nav class="bg-[#E7D8B8] shadow-sm">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
 
@@ -35,7 +52,7 @@ if (isset($_SESSION['userID'])) {
         </a>
 
         <div class="flex items-center md:order-2 space-x-3 rtl:space-x-reverse">
-            <a href="<?php echo $isLoggedIn ? '../public/profile.php' : '../public/login.php'; ?>" class="hidden md:block text-gray-600 hover:text-gray-800">
+            <a href="<?php echo $profileRedirect; ?>" class="hidden md:block text-gray-600 hover:text-gray-800">
                 <svg class="w-10 h-10 p-1 border-2 border-gray-400 rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
@@ -43,16 +60,16 @@ if (isset($_SESSION['userID'])) {
             
             <div class="hidden md:flex flex-col text-gray-600">
                 <span class="text-xs leading-none">Selamat Datang,</span>
-                <span class="text-sm font-bold leading-tight">
-                    <span class="<?php echo ($displayRole == 'Admin') ? 'text-red-600' : (($displayRole == 'Member') ? 'text-[#D4A259]' : 'text-blue-700'); ?>">
-                        <?php echo htmlspecialchars($displayRole); ?>
-                    </span>
+                <span class="text-sm font-bold text-gray-800 leading-none mb-1">
+                    <?php echo htmlspecialchars($displayName); ?>
                 </span>
             </div>
 
             <?php if ($isLoggedIn): ?>
                 <a href="../backend/logout.php" class="hidden md:block ml-4 text-xs font-bold text-red-600 hover:underline">
-                    LOG KELUAR
+                    <svg class="w-6 h-6 text-red-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H8m12 0-4 4m4-4-4-4M9 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h2"/>
+                    </svg>
                 </a>
             <?php endif; ?>
 
@@ -77,10 +94,11 @@ if (isset($_SESSION['userID'])) {
                 </li>
                 <?php if ($displayRole == 'Admin'): ?>
                 <li>
-                    <a href="../admin/dashboard.php" class="block py-2 px-3 text-red-600 font-bold rounded hover:bg-gray-200 md:hover:bg-transparent md:p-0">Admin Panel</a>
+                    <a href="../admin/dashboard.php" class="block py-2 px-3 text-yellow-600 font-bold rounded hover:bg-gray-200 md:hover:bg-transparent md:p-0">Admin Panel</a>
                 </li>
                 <?php endif; ?>
             </ul>
         </div>
     </div>
 </nav>
+<?php endif; ?>

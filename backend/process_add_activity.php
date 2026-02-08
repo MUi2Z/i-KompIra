@@ -1,105 +1,88 @@
 <?php
     // process_add_activity.php
+    session_start();
+    include_once '../config/connection.php';
 
-    // Sertakan fail sambungan
-    include '../config/connection.php'; 
+    $target_dir = "../uploads/activities/";
 
-    // Tetapan direktori muat naik (UBAH INI MENGIKUT KEPERLUAN ANDA)
-    $target_dir = "../uploads/activities/"; 
-
-    // Pastikan direktori muat naik wujud
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);
     }
-
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $activityTitle  = trim($_POST['activityTitle'] ?? '');
         $activityDesc   = trim($_POST['activityDesc'] ?? '');
         $userID         = (int)($_POST['userID'] ?? 0); 
-        $thumbnailPath  = NULL; // Akan menyimpan path fail yang dimuat naik
+        $uniqueFilename = NULL; // Kita akan simpan nama fail sahaja di sini
 
-        // Validasi Asas
         if (empty($activityTitle) || empty($activityDesc) || $userID == 0) {
             $message = urlencode("Sila lengkapkan semua medan yang diperlukan.");
-            header("Location: ../admin/activity_list.php?status=error&message=$message");
+            header("Location: ../admin/activities.php?status=error&message=$message");
             exit();
         }
 
-        // ===================================
-        // 1. Proses Muat Naik Fail (Thumbnail)
-        // ===================================
         if (isset($_FILES["activityThumbnail"]) && $_FILES["activityThumbnail"]["error"] == 0) {
             $file = $_FILES["activityThumbnail"];
             $fileType = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
+            
+            // Mencipta nama fail unik
             $uniqueFilename = uniqid('thumb_', true) . '.' . $fileType;
             $target_file = $target_dir . $uniqueFilename;
 
-            // Semak saiz, jenis, dan cuba pindahkan fail
-            if ($file["size"] > 5000000) { // Had 5MB
+            if ($file["size"] > 5000000) { 
                 $message = urlencode("Ralat muat naik: Saiz imej terlalu besar.");
-                header("Location: ../admin/activity_list.php?status=error&message=$message");
-                exit();
-            }
-            if (!in_array($fileType, ['jpg', 'jpeg', 'png', 'gif'])) {
-                $message = urlencode("Ralat muat naik: Hanya format JPG, JPEG, PNG & GIF dibenarkan.");
-                header("Location: ../admin/activity_list.php?status=error&message=$message");
+                header("Location: ../admin/activities.php?status=error&message=$message");
                 exit();
             }
 
-            if (move_uploaded_file($file["tmp_name"], $target_file)) {
-                $thumbnailPath = $target_file;
-            } else {
+            if (!in_array($fileType, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $message = urlencode("Ralat muat naik: Format tidak dibenarkan.");
+                header("Location: ../admin/activities.php?status=error&message=$message");
+                exit();
+            }
+
+            if (!move_uploaded_file($file["tmp_name"], $target_file)) {
                 $message = urlencode("Ralat muat naik: Gagal memindahkan fail.");
-                header("Location: ../admin/activity_list.php?status=error&message=$message");
+                header("Location: ../admin/activities.php?status=error&message=$message");
                 exit();
             }
         } else {
-            $message = urlencode("Ralat muat naik imej: Tiada fail dipilih atau ralat berlaku.");
-            header("Location: ../admin/activity_list.php?status=error&message=$message");
+            $message = urlencode("Sila muat naik imej thumbnail.");
+            header("Location: ../admin/activities.php?status=error&message=$message");
             exit();
         }
 
-        // ===================================
-        // 2. Masukkan Data ke Pangkalan Data
-        // ===================================
+        // PERBAIKAN DI SINI:
+        // Pastikan nama kolom di SQL (createdAt, updatedAt) sama dengan di database anda
         $sql = "INSERT INTO activities (activityTitle, activityDesc, activityThumbnail, createdAt, updatedAt, userID) 
                 VALUES (?, ?, ?, NOW(), NOW(), ?)";
 
         if ($stmt = $conn->prepare($sql)) {
-
-            // Ikat pemboleh ubah: 3 string, 1 integer
+            // Kita gunakan $uniqueFilename yang kita buat di atas tadi
             $stmt->bind_param("sssi", 
                 $activityTitle, 
                 $activityDesc, 
-                $thumbnailPath, // Simpan path fail yang dimuat naik
-                $userID 
+                $uniqueFilename, 
+                $userID
             );
 
             if ($stmt->execute()) {
-                $message = urlencode("Aktiviti '$activityTitle' telah berjaya ditambahkan.");
-                header("Location: ../admin/activity_list.php?status=success&message=$message");
+                $message = urlencode("Aktiviti berjaya ditambahkan.");
+                header("Location: ../admin/activities.php?status=success&message=$message");
             } else {
-                // Jika ralat DB, padam fail yang dimuat naik (rollback manual)
-                if (file_exists($thumbnailPath)) {
-                    unlink($thumbnailPath);
+                // Rollback: Padam fail jika DB gagal
+                if ($uniqueFilename && file_exists($target_dir . $uniqueFilename)) {
+                    unlink($target_dir . $uniqueFilename);
                 }
-                $message = urlencode("Ralat pangkalan data: " . $stmt->error);
-                header("Location: ../admin/activity_list.php?status=error&message=$message");
+                $message = urlencode("Ralat DB: " . $stmt->error);
+                header("Location: ../admin/activities.php?status=error&message=$message");
             }
-
             $stmt->close();
-
         } else {
-            $message = urlencode("Ralat SQL (Prepare): " . $conn->error);
-            header("Location: ../admin/activity_list.php?status=error&message=$message");
+            $message = urlencode("Ralat SQL: " . $conn->error);
+            header("Location: ../admin/activities.php?status=error&message=$message");
         }
-
         $conn->close();
-
-    } else {
-        header("Location: ../admin/activity_list.php");
-        exit();
     }
 ?>
