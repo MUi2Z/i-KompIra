@@ -21,14 +21,20 @@ if (isset($_SESSION['userID'])) {
     if ($user = $result->fetch_assoc()) {
         $displayRole = ucfirst($user['role']); 
         $displayName = $user['userName'];
+        if ($user['userName'] == NULL) {
+            $displayName = $user['role'];
+        }
         $email = $user['email'];
 
         // Typo Fix: dashbord.php -> dashboard.php
         if ($displayRole == 'Admin') {
             $profileRedirect = '../admin/dashboard.php';
         }
-        elseif ($displayRole == 'Member' || $displayRole == 'User') {
-            $profileRedirect = "../member/profile.php";
+        elseif ($displayRole == 'Member' || $displayRole == 'Ahli') {
+            $profileRedirect = "../member/dashboard.php";
+        }
+        elseif ($displayRole == 'User' || $displayRole == 'Pengguna') {
+            $profileRedirect = "../member/dashboard.php";
         }
     }
 } else {
@@ -38,9 +44,10 @@ if (isset($_SESSION['userID'])) {
 // --- LOGIK SEMBUNYI NAVBAR ---
 // Semak jika URL mengandungi folder '/admin/'
 $isAdminFolder = (strpos($_SERVER['PHP_SELF'], '/admin/') !== false);
+$isMemberFolder = (strpos($_SERVER['PHP_SELF'], '/member/') !== false);
 ?>
 
-<?php if (!$isAdminFolder): // Hanya papar jika BUKAN dalam folder admin ?>
+<?php if (!$isAdminFolder && !$isMemberFolder): // Hanya papar jika BUKAN dalam folder admin atau member ?>
 <nav class="bg-[#E7D8B8] shadow-sm">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
 
@@ -59,10 +66,16 @@ $isAdminFolder = (strpos($_SERVER['PHP_SELF'], '/admin/') !== false);
             </a>
             
             <div class="hidden md:flex flex-col text-gray-600">
-                <span class="text-xs leading-none">Selamat Datang,</span>
-                <span class="text-sm font-bold text-gray-800 leading-none mb-1">
-                    <?php echo htmlspecialchars($displayName); ?>
-                </span>
+                <?php if ($isLoggedIn): ?>
+                    <span class="text-xs leading-none">Selamat Datang,</span>
+                    <span class="text-sm font-bold text-gray-800 leading-none mb-1">
+                        <?php echo htmlspecialchars($displayName); ?>
+                    </span>
+                <?php else: ?>
+                    <a href="<?php echo $profileRedirect; ?>" class="px-4 py-2 bg-green-600 text-white text-sm font-bold rounded hover:bg-green-500 transition-colors">
+                        Log Masuk
+                    </a>
+                <?php endif; ?>
             </div>
 
             <?php if ($isLoggedIn): ?>
@@ -84,17 +97,17 @@ $isAdminFolder = (strpos($_SERVER['PHP_SELF'], '/admin/') !== false);
         <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-centered-links">
             <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium uppercase text-sm border border-gray-200 rounded-lg bg-[#f0ebe5] md:space-x-10 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent">
                 <li>
-                    <a href="../public/index.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Utama</a>
+                    <a href="../public/index.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-gray-700 md:p-0">Utama</a>
                 </li>
                 <li>
-                    <a href="../public/info.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Info</a>
+                    <a href="../public/info.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-gray-700 md:p-0">Info</a>
                 </li>
                 <li>
-                    <a href="../public/activity.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-orange-600 md:p-0">Tutorial</a>
+                    <a href="../public/activity.php" class="block py-2 px-3 text-gray-800 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-gray-700 md:p-0">Tutorial</a>
                 </li>
-                <?php if ($displayRole == 'Admin'): ?>
+                <?php if (($displayRole == 'Admin') || ($displayRole == 'Member')): ?>
                 <li>
-                    <a href="../admin/dashboard.php" class="block py-2 px-3 text-yellow-600 font-bold rounded hover:bg-gray-200 md:hover:bg-transparent md:p-0">Admin Panel</a>
+                    <a href="<?php echo htmlspecialchars($profileRedirect); ?>" class="block py-2 px-3 text-yellow-600 font-bold rounded hover:bg-gray-200 md:hover:bg-transparent md:p-0"><?php echo htmlspecialchars($displayRole); ?> Panel</a>
                 </li>
                 <?php endif; ?>
             </ul>

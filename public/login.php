@@ -43,13 +43,12 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <input type="checkbox" id="remember" class="h-4 w-4 text-[#D4A259] border-gray-300 rounded">
-                    <label for="remember" class="ml-2 block text-sm text-gray-600">Ingat Saya</label>
+                    <!-- <label for="remember" class="ml-2 block text-sm text-gray-600">Ingat Saya</label> -->
                 </div>
                 <a href="#" class="text-sm text-[#D4A259] hover:underline">Lupa Kata Laluan?</a>
             </div>
 
-            <button type="submit" 
-                    class="w-full py-3 bg-[#D4A259] text-white font-bold rounded-lg shadow-md hover:bg-[#b88a4a] transition duration-200 transform hover:-translate-y-1">
+            <button type="submit" class="w-full py-3 bg-[#03c000] text-white font-bold rounded-lg shadow-md hover:bg-[#00ff26] transition duration-200 transform hover:-translate-y-1">
                 MASUK
             </button>
         </form>
@@ -57,7 +56,7 @@
         <div class="mt-8 text-center border-t pt-6">
             <p class="text-sm text-gray-600">
                 Belum mempunyai akaun? 
-                <a href="register.php" class="text-[#D4A259] font-bold hover:underline">Daftar Sekarang</a>
+                <a href="register.php" class="text-[#4985ff] font-bold hover:underline">Daftar Sekarang</a>
             </p>
         </div>
     </div>

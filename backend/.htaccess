@@ -1,0 +1,16 @@
+# 1. Menghalang penyenaraian fail dalam direktori
+# Jika sesiapa cuba buka domain.com/backend/, mereka akan dapat ralat 403 Forbidden
+Options -Indexes
+
+# 2. Menghalang akses kepada fail sensitif selain .php
+# Contoh: backup.sql, error.log, atau fail konfigurasi .ini
+<FilesMatch "\.(bak|sql|log|ini|sh|inc|swp|dist)|~|^\..*$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 3. Melindungi fail .htaccess itu sendiri
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>

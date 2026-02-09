@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($user['role'] === 'admin') {
                 header("Location: ../admin/dashboard.php");
             } elseif ($user['role'] === 'member') {
-                header("Location: ../member/profile.php");
+                header("Location: ../member/dashboard.php");
             } else {
                 header("Location: ../public/index.php");
             }

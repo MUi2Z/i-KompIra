@@ -11,7 +11,7 @@
                 </svg>
             </div>
             <h2 class="text-3xl font-bold text-gray-800">Daftar Akaun</h2>
-            <p class="text-gray-500 mt-2">Sertai komuniti i-KompIra hari ini</p>
+            <!-- <p class="text-gray-500 mt-2">Sertai komuniti i-KompIra hari ini</p>  -->
         </div>
 
         <?php if (isset($_GET['error'])): ?>
@@ -43,7 +43,7 @@
             </div>
 
             <button type="submit" 
-                    class="w-full py-3 bg-[#D4A259] text-white font-bold rounded-lg shadow-md hover:bg-[#b88a4a] transition duration-200">
+                    class="w-full py-3 bg-[#03c000] text-white font-bold rounded-lg shadow-md hover:bg-[#00ff26] transition duration-200">
                 DAFTAR SEKARANG
             </button>
         </form>
@@ -51,7 +51,7 @@
         <div class="mt-8 text-center border-t pt-6">
             <p class="text-sm text-gray-600">
                 Sudah mempunyai akaun? 
-                <a href="login.php" class="text-[#D4A259] font-bold hover:underline">Log Masuk</a>
+                <a href="login.php" class="text-[#4985ff] font-bold hover:underline">Log Masuk</a>
             </p>
         </div>
     </div>

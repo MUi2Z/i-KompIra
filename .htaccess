@@ -1,3 +1,4 @@
+# Aktifkan Enjin Rewrite
 RewriteEngine On
 
 # Jika fail wujud, guna fail itu
@@ -8,3 +9,13 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^login$ public/login.php [L]
 RewriteRule ^register$ public/register.php [L]
 RewriteRule ^dashboard$ admin/dashboard.php [L]
+
+# Tentukan fail untuk setiap kod ralat
+ErrorDocument 404 /i-kompira/errors/404.php
+ErrorDocument 500 /i-kompira/errors/500.php
+ErrorDocument 403 /i-kompira/errors/403.php
+
+# Halang akses terus ke folder errors melalui pelayar
+#<IfModule mod_rewrite.c>
+#    RewriteRule ^errors/.*$ - [F,L]
+#</IfModule>
