@@ -8,12 +8,12 @@
     w-64 -translate-x-full lg:translate-x-0 lg:w-64 flex flex-col rounded-e-2xl overflow-hidden my-4">
     
     <div class="p-6 flex items-center justify-between border-b border-[#D4A259]/20">
-        <div class="flex items-center space-x-3 overflow-hidden">
+        <a href="../" class="flex items-center space-x-3 overflow-hidden">
             <div class="h-10 w-10 bg-[#E7D8B8] rounded-xl shadow-inner flex-shrink-0 flex items-center justify-center p-2">
                 <img src="../src/img/favicon.png" alt="Logo" class="w-full">
             </div>
             <span class="sidebar-text text-xl font-bold text-gray-800 whitespace-nowrap">i-KompIra</span>
-        </div>
+        </a>
         <button onclick="collapseDesktop()" class="hidden lg:block text-[#D4A259] hover:bg-[#D4A259]/10 p-1 rounded-md">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
         </button>

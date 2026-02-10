@@ -198,11 +198,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-r from-[#D4A259] to-[#B88A4A] rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+                    <div class="bg-white rounded-2xl p-6 text-orange-900 shadow-lg relative overflow-hidden group">
                         <div class="relative z-10">
                             <h3 class="text-xl font-bold mb-2">Latihan Interaktif</h3>
                             <p class="text-sm opacity-90 mb-4 max-w-xs">Tingkatkan kemahiran ketukan kompang anda dengan simulasi interaktif.</p>
-                            <a href="practice.php" class="inline-block bg-white text-[#D4A259] px-6 py-2 rounded-xl font-bold text-sm hover:shadow-lg transition">MULA LATIHAN</a>
+                            <a href="practice.php" class="inline-block bg-yellow-800 text-[#ffffff] px-6 py-2 rounded-xl font-bold text-sm hover:shadow-lg transition">MULA LATIHAN</a>
                         </div>
                         <svg class="absolute -right-4 -bottom-4 w-32 h-32 opacity-10 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/>

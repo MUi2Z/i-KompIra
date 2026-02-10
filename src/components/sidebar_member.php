@@ -8,12 +8,12 @@
     w-64 -translate-x-full lg:translate-x-0 lg:w-64 flex flex-col rounded-e-2xl overflow-hidden">
     
     <div class="p-6 flex items-center justify-between border-b border-[#D4A259]/20">
-        <div class="flex items-center space-x-3 overflow-hidden">
+        <a href="../" class="flex items-center space-x-3 overflow-hidden">
             <div class="h-10 w-10 bg-[#E7D8B8] rounded-xl shadow-inner flex-shrink-0 flex items-center justify-center p-2">
                 <img src="../src/img/favicon.png" alt="Logo" class="w-full">
             </div>
             <span class="sidebar-text text-xl font-bold text-gray-800 whitespace-nowrap">i-KompIra</span>
-        </div>
+        </a>
         <button onclick="collapseDesktop()" class="hidden lg:block text-[#D4A259] hover:bg-[#D4A259]/10 p-1 rounded-md">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
         </button>
@@ -37,6 +37,11 @@
         <a href="../member/profile.php" class="flex items-center space-x-3 py-3 px-4 text-gray-700 font-semibold rounded-xl hover:bg-[#D4A259] hover:text-white transition-all duration-200 group">
             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
             <span class="sidebar-text whitespace-nowrap">Profil Saya</span>
+        </a>
+
+        <a href="../member/participate.php" class="flex items-center space-x-3 py-3 px-4 text-gray-700 font-semibold rounded-xl hover:bg-[#D4A259] hover:text-white transition-all duration-200 group">
+            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="sidebar-text whitespace-nowrap">Aktiviti</span>
         </a>
     </nav>
 

@@ -1,0 +1,10 @@
+{
+  "songTitle": "Rentak Tradisional 1",
+  "bpm": 100,
+  "data": [
+    {"time": 1000, "type": "pak", "role": "melalu"},
+    {"time": 2000, "type": "tung", "role": "melalu"},
+    {"time": 2500, "type": "pak", "role": "menyilang"},
+    {"time": 3000, "type": "pak", "role": "melalu"}
+  ]
+}
