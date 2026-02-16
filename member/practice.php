@@ -35,7 +35,6 @@
 </style>
 
 <div class="flex flex-col items-center justify-center min-h-screen text-[#e2d1c3] overflow-hidden select-none">
-
     <div id="overlay" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center flex-col gap-6 text-center px-4">
         <h2 id="status-title" class="text-4xl font-bold text-[#d4a373] tracking-tighter uppercase">Kompang Interaktif</h2>
         <div id="final-score" class="hidden text-2xl text-white mb-4"></div>

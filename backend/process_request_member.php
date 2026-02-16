@@ -97,7 +97,7 @@ try {
     $conn->commit();
     
     // Send notification to admin
-    require_once 'notify_admin.php';
+    require_once '../admin/notify_admin.php';
     notifyAdminNewApplication($userID, $fullName, $NRIC, $conn);
     
     // Success - redirect with success message

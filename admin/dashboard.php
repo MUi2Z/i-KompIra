@@ -196,7 +196,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100">
                         <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                             <h2 class="text-lg font-semibold text-gray-800">Permohonan Ahli Baru</h2>
-                            <a href="members.php" class="text-sm text-blue-600 hover:underline">Lihat Semua</a>
+                            <a href="pending_requests.php" class="text-sm text-blue-600 hover:underline">Lihat Semua</a>
                         </div>
                         <div class="p-6">
                             <?php if ($latest_requests->num_rows > 0): ?>
