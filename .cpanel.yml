@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home3/muzzelui/public_html/i-KompIra/
+    - export DEPLOYPATH=/home3/muzzelui/public_html/i-kompira/
     - /bin/cp -R * $DEPLOYPATH
