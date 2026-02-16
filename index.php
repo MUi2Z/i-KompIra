@@ -5,6 +5,6 @@
 		$uri = 'http://';
 	}
 	$uri .= $_SERVER['HTTP_HOST'];
-	header('Location: '.$uri.'/i-KompIra/public/index.php');
+	header('Location: '.$uri.'/public/index.php');
 	exit;
 ?>
