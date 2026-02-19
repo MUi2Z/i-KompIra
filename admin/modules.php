@@ -15,7 +15,7 @@ if ($result && $result->num_rows > 0) {
 }
 ?>
 
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen">
     <?php include '../src/components/sidebar_admin.php'; ?>
     
     <div class="flex-1">
@@ -69,8 +69,9 @@ if ($result && $result->num_rows > 0) {
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="h-12 w-12 flex-shrink-0 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-                                                <img src="../uploads/modules/thumbs/<?php echo htmlspecialchars($module['moduleThumbnail']); ?>" 
-                                                     alt="" class="h-full w-full object-cover">
+                                                <img src="<?php echo !empty($module['moduleThumbnail']) ? '../uploads/modules/thumbs/' . htmlspecialchars($module['moduleThumbnail']) : '../src/img/default_module.png'; ?>" 
+                                                     alt="Module Thumbnail" 
+                                                     class="h-full w-full object-cover">
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($module['moduleName']); ?></div>
@@ -109,4 +110,4 @@ if ($result && $result->num_rows > 0) {
 include '../src/components/modal_add_module.php'; // Pastikan nama fail modal betul
 include '../src/components/footer.php'; 
 ?>
-<script src="../assets/js/modal-logic.js"></script>
+<script src="../src/js/modal-logic.js"></script>

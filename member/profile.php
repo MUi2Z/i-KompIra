@@ -113,12 +113,39 @@ if (empty($_SESSION['csrf_token'])) {
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-black text-gray-400 uppercase mb-2">Program Pengajian</label>
-                                    <select name="programme" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none transition-all">
-                                        <option>Diploma</option>
-                                        <option>Sarjana Muda</option>
-                                        <option>Pascasiswazah</option>
-                                    </select>
+                                    <label class="block text-xs font-black text-gray-400 uppercase mb-2">Program</label>
+                                    <input 
+                                        list="programOptions" 
+                                        name="programme" 
+                                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none transition-all"
+                                        placeholder="Cari atau pilih program..."
+                                    >
+                                    <datalist id="programOptions">
+                                        <option value="1 SVM KPD">1 SVM KPD</option>
+                                        <option value="1 SVM KMK">1 SVM KMK</option>
+                                        <option value="1 SVM BAK">1 SVM BAK</option>
+                                        <option value="1 SVM BPM">1 SVM BPM</option>
+                                        <option value="1 SVM HSK">1 SVM HSK</option>
+                                        <option value="1 SVM HBP">1 SVM HBP</option>
+                                        <option value="2 SVM KPD">2 SVM KPD</option>
+                                        <option value="2 SVM KMK">2 SVM KMK</option>
+                                        <option value="2 SVM BAK">2 SVM BAK</option>
+                                        <option value="2 SVM BPM">2 SVM BPM</option>
+                                        <option value="2 SVM HSK">2 SVM HSK</option>
+                                        <option value="2 SVM HBP">2 SVM HBP</option>
+                                        <option value="1 DVM KPD">1 DVM KPD</option>
+                                        <option value="1 DVM KMK">1 DVM KMK</option>
+                                        <option value="1 DVM BAK">1 DVM BAK</option>
+                                        <option value="1 DVM BPM">1 DVM BPM</option>
+                                        <option value="1 DVM HSK">1 DVM HSK</option>
+                                        <option value="1 DVM HBP">1 DVM HBP</option>
+                                        <option value="2 DVM KPD">2 DVM KPD</option>
+                                        <option value="2 DVM KMK">2 DVM KMK</option>
+                                        <option value="2 DVM BAK">2 DVM BAK</option>
+                                        <option value="2 DVM BPM">2 DVM BPM</option>
+                                        <option value="2 DVM HSK">2 DVM HSK</option>
+                                        <option value="2 DVM HBP">2 DVM HBP</option>
+                                    </datalist>
                                 </div>
 
                                 <div>
@@ -126,6 +153,7 @@ if (empty($_SESSION['csrf_token'])) {
                                     <select name="beatRoleType" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none transition-all">
                                         <option value="Melalu">Melalu (Pemain Utama)</option>
                                         <option value="Menyilang">Menyilang (Pemain Tingkah)</option>
+                                        <option value="Menganak">Menganak (Pemain Bebas)</option>
                                     </select>
                                 </div>
 

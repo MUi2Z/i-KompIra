@@ -13,7 +13,7 @@ $modulesResult = $conn->query($modulesSql);
 <main class="container mx-auto py-10 px-4">
     
     <section class="mb-16">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#D4A259] pl-4">Video Tutorial Utama</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#D4A259] pl-4">Kompang Interaktif</h2>
         <div class="aspect-video w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border-4 border-[#E7D8B8]">
             <iframe class="w-full h-full" src="../src/vid/komp 1.mp4" title="Tutorial Kompira" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>           
@@ -73,7 +73,9 @@ $modulesResult = $conn->query($modulesSql);
                 <?php while($module = $modulesResult->fetch_assoc()): ?>
                     <div class="flex bg-[#F9F6F0] rounded-xl p-4 border border-[#E7D8B8] items-center space-x-4 hover:bg-[#F3EDDF] transition">
                         <div class="flex-shrink-0 w-16 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                            <img src="../uploads/modules/<?php echo $module['moduleThumbnail']; ?>" class="w-12 h-12 object-contain" alt="PDF">
+                            <img src="<?php echo !empty($module['moduleThumbnail']) ? '../uploads/modules/thumbs/' . htmlspecialchars($module['moduleThumbnail']) : '../src/img/default_module.png'; ?>" 
+                                 alt="Module Thumbnail" 
+                                 class="h-full w-full object-cover">
                         </div>
                         <div class="flex-1">
                             <h4 class="font-bold text-gray-800 text-sm"><?php echo htmlspecialchars($module['moduleName']); ?></h4>

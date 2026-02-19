@@ -12,7 +12,7 @@
         <p class="text-2xl font-semibold text-gray-800 mt-4">Alamak! Akses Dilarang.</p>
         <p class="text-gray-500 mt-2">Maaf, anda tidak memiliki akses ke halaman ini.</p>
         
-        <a href="./index.php" class="inline-block mt-8 px-8 py-3 bg-[#D4A259] text-white font-bold rounded-xl hover:bg-[#B88A4A] transition-all">
+        <a href="../index.php" class="inline-block mt-8 px-8 py-3 bg-[#D4A259] text-white font-bold rounded-xl hover:bg-[#B88A4A] transition-all">
             KEMBALI KE UTAMA
         </a>
     </div>

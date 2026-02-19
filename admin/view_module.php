@@ -29,7 +29,7 @@ $module = $result->fetch_assoc();
 include '../src/components/header.php';
 ?>
 
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen">
     <?php include '../src/components/sidebar_admin.php'; ?>
     
     <main class="flex-1 p-6 lg:p-10">
@@ -89,8 +89,9 @@ include '../src/components/header.php';
                     <div class="space-y-6">
                         <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
                             <p class="p-3 text-xs font-bold text-gray-500 bg-gray-50 border-b">Thumbnail Modul</p>
-                            <img src="../uploads/modules/thumbs/<?php echo $module['moduleThumbnail']; ?>" 
-                                 alt="Thumbnail" class="w-full h-40 object-cover">
+                            <img src="<?php echo !empty($module['moduleThumbnail']) ? '../uploads/modules/thumbs/' . htmlspecialchars($module['moduleThumbnail']) : '../src/img/default_module.png'; ?>" 
+                                 alt="Module Thumbnail" 
+                                 class="h-full w-full object-cover">
                         </div>
 
                         <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 space-y-4">

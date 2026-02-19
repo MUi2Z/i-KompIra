@@ -18,14 +18,14 @@ $sql = "SELECT r.*, u.userName
 $result = $conn->query($sql);
 ?>
 
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen">
     <?php include '../src/components/sidebar_admin.php'; ?>
 
     <main class="flex-1 p-8">
         <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800">Perpustakaan Irama Digital</h1>
-                <p class="text-gray-600 mt-1">Uruskan skrip JSON irama dan fail audio panduan ahli.</p>
+                <p class="text-gray-600 mt-1">Uruskan irama dan fail audio panduan ahli.</p>
             </div>
             
             <button onclick="toggleModal('addRhythmModal')" 
@@ -33,7 +33,7 @@ $result = $conn->query($sql);
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                Tambah JSON Irama
+                Tambah Irama
             </button>
         </div>
 
