@@ -18,7 +18,7 @@ $modulesResult = $conn->query($modulesSql);
             <iframe class="w-full h-full" src="../src/vid/komp 1.mp4" title="Tutorial Kompira" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>           
         <div class="mt-auto pt-4 border-t border-gray-50 flex items-center text-center justify-center">
-            <button onclick="window.location='../public/practice.php'" type="submit" class="bg-orange-700/80 hover:bg-orange-700 text-white font-extrabold py-3 px-10 rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-105 uppercase tracking-wider">
+            <button onclick="window.location='../practice/index.php'" type="submit" class="bg-orange-700/80 hover:bg-orange-700 text-white font-extrabold py-3 px-10 rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-105 uppercase tracking-wider">
                 KE HALAMAN INTERAKTIF
             </button>
         </div>

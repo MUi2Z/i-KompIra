@@ -1,241 +1,194 @@
-const notesLayer = document.getElementById('notes-layer');
-const scoreDisplay = document.getElementById('score');
-const livesDisplay = document.getElementById('lives');
-const soundPak = document.getElementById('sound-pak');
-const soundTung = document.getElementById('sound-tung');
-const gameCircle = document.getElementById('game-circle');
-
-let currentSongData = null;
-let score = 0;
-let lives = 5;
-let playerRole = '';
+let BEATMAP = [];
+let currentRawData = null;
+let playerRole = ''; // 'melalu', 'menyilang', 'menganak', 'auto'
 let gameActive = false;
 let notes = [];
 let gameTime = 0;
+let score = 0;
+let lives = 5;
 
 const CONFIG = {
-    speed: 4,
+    speed: 5,
     hitZone: 60,
-    spawnOffset: 1500, // Milisaat sebelum nota sampai ke tengah
+    spawnOffset: 2000 
 };
 
-let BEATMAP = []; // Kosong pada permulaan
+function handleSongSelection(el) {
+    // Ambil string JSON dari atribut data-source
+    const rawJson = el.getAttribute('data-source');
+    const speed = el.getAttribute('data-speed');
 
-async function selectSong(filename, element) {
+    console.log("Mencuba parse JSON...");
+
     try {
-        // 1. Ambil data dari folder uploads
-        const response = await fetch(`../uploads/rhythms/${filename}`);
-        if (!response.ok) throw new Error('Fail irama tidak dijumpai');
+        currentRawData = JSON.parse(rawJson);
+        CONFIG.speed = parseInt(speed);
+
+        // Visual feedback
+        document.querySelectorAll('.btn-song').forEach(b => b.classList.remove('btn-active'));
+        el.classList.add('btn-active');
         
-        const json = await response.json();
-        currentSongData = json.data;
-
-        // 2. Visual feedback (highlight butang yang dipilih)
-        document.querySelectorAll('.song-btn').forEach(btn => {
-            btn.classList.remove('border-yellow-500', 'bg-[#432818]');
-            btn.classList.add('border-[#7f5539]');
-        });
-        element.classList.add('border-yellow-500', 'bg-[#432818]');
-
-        // 3. Tunjukkan pemilihan peranan
         document.getElementById('role-selection').classList.remove('hidden');
-        
-        console.log("Lagu dimuat naik:", json.songTitle);
-    } catch (error) {
-        console.error("Ralat:", error);
-        alert("Gagal memuat naik fail irama tersebut.");
+        console.log("Berjaya!");
+    } catch(e) { 
+        console.error("Ralat Parse JSON:", e);
+        alert("Data JSON dalam database tidak sah. Sila semak format JSON anda."); 
     }
-}
-
-// Fungsi untuk ambil fail JSON
-async function loadRhythm(filename) {
-    try {
-        const response = await fetch(`/uploads/rhythms/${filename}`);
-        if (!response.ok) throw new Error('Fail irama tidak dijumpai');
-        
-        const json = await response.json();
-        
-        // Reset status spawned untuk setiap nota
-        BEATMAP = json.data.map(item => ({
-            ...item,
-            spawned: false
-        }));
-
-        console.log("Irama berjaya dimuat naik:", json.songTitle);
-    } catch (error) {
-        console.error("Ralat memuat naik JSON:", error);
-        alert("Gagal memuat naik fail irama.");
-    }
-}
-
-// Ubah fungsi startGame untuk pastikan data sudah ada
-async function startGame(role) {
-    // Jika BEATMAP masih kosong, muat naik lagu default dahulu
-    if (BEATMAP.length === 0) {
-        await loadRhythm('lagu1.json'); 
-    }
-
-    playerRole = role;
-    gameActive = true;
-    score = 0;
-    lives = 5;
-    gameTime = 0;
-    notes = [];
-    notesLayer.innerHTML = '';
-    
-    // ... (kod selebihnya sama seperti sebelum ini)
-    requestAnimationFrame(gameLoop);
 }
 
 function startGame(role) {
-    if (!currentSongData) {
-        alert("Sila pilih lagu terlebih dahulu!");
-        return;
-    }
-
-    // Setkan BEATMAP daripada data lagu yang dipilih
-    // Kita buat salinan supaya data asal tak berubah (penting untuk replay)
-    BEATMAP = currentSongData.map(item => ({
-        ...item,
-        spawned: false
-    }));
-
     playerRole = role;
     gameActive = true;
     score = 0;
     lives = 5;
     gameTime = 0;
     notes = [];
-    notesLayer.innerHTML = '';
+    document.getElementById('notes-layer').innerHTML = '';
     
-    scoreDisplay.innerText = score;
-    livesDisplay.innerText = lives;
+    // Reset data spawn
+    BEATMAP = currentRawData.map(n => ({ ...n, spawned: false }));
+
     document.getElementById('overlay').style.display = 'none';
-    document.getElementById('mode-title').innerText = `PERANAN: ${role}`;
+    document.getElementById('display-mode').innerText = `MOD: ${role}`;
     
+    if(role !== 'auto') {
+        document.getElementById('game-stats').style.opacity = '1';
+        document.getElementById('score-val').innerText = '0';
+        document.getElementById('lives-val').innerText = '5';
+    } else {
+        document.getElementById('game-stats').style.opacity = '0';
+    }
+
     requestAnimationFrame(gameLoop);
 }
 
-function createNote(type, role) {
+function createNote(data) {
     const el = document.createElement('div');
-    const isPlayer = (role === playerRole);
+    const isPlayerNote = (data.role === playerRole);
     
-    el.className = `indicator-note ${type === 'pak' ? 'tri-up' : 'tri-down'} ${!isPlayer ? 'note-ghost' : ''}`;
-    el.style.left = '100%';
-    notesLayer.appendChild(el);
+    // Set style mengikut peranan dan jenis pukulan
+    el.className = `indicator-note role-${data.role} ${data.type === 'pak' ? 'tri-up' : 'tri-down'}`;
     
-    notes.push({ 
-        el, 
-        type, 
-        role, 
-        isPlayer,
-        dist: 400, // Jarak mula
-        autoPlayed: false 
+    if (playerRole !== 'auto') {
+        if (isPlayerNote) el.classList.add('player-target');
+        else el.classList.add('note-ghost');
+    }
+
+    document.getElementById('notes-layer').appendChild(el);
+    
+    notes.push({
+        ...data,
+        el,
+        dist: 500,
+        processed: false
     });
-}
-
-function handleHit(type) {
-    // Mainkan bunyi setiap kali tekan (untuk feedback user)
-    const sound = type === 'pak' ? soundPak : soundTung;
-    sound.currentTime = 0;
-    sound.play();
-
-    let hitDetected = false;
-    for (let i = 0; i < notes.length; i++) {
-        let note = notes[i];
-        // Hanya boleh hit nota milik peranan sendiri
-        if (note.isPlayer && note.type === type && Math.abs(note.dist) < CONFIG.hitZone) {
-            score += 20;
-            scoreDisplay.innerText = score;
-            note.el.remove();
-            notes.splice(i, 1);
-            hitDetected = true;
-            flashCircle('#ffb703');
-            break;
-        }
-    }
-    
-    if (!hitDetected) {
-        flashCircle('#ff4d4d');
-        // Penalti nyawa hanya jika gagal hit nota sendiri
-        lives--;
-        livesDisplay.innerText = lives;
-        if (lives <= 0) gameOver();
-    }
 }
 
 function gameLoop() {
     if (!gameActive) return;
-    gameTime += 16.67; // Tambah ~16ms setiap frame (60fps)
+    gameTime += 16.67;
 
-    // Check beatmap untuk spawn nota baru
-    BEATMAP.forEach((item, index) => {
+    // Logik Spawn (Menyokong nota serentak)
+    BEATMAP.forEach(item => {
         if (!item.spawned && gameTime >= (item.time - CONFIG.spawnOffset)) {
-            createNote(item.type, item.role);
+            createNote(item);
             item.spawned = true;
         }
     });
 
     for (let i = notes.length - 1; i >= 0; i--) {
-        let note = notes[i];
-        note.dist -= CONFIG.speed;
+        let n = notes[i];
+        n.dist -= CONFIG.speed;
 
-        // Posisi visual
-        const verticalPos = (note.type === 'pak') ? '38%' : '62%';
-        note.el.style.left = `calc(50% + ${note.dist}px)`;
-        note.el.style.top = verticalPos;
-        note.el.style.transform = `translate(-50%, -50%)`;
+        n.el.style.left = `calc(50% + ${n.dist}px)`;
+        n.el.style.top = (n.type === 'pak') ? '38%' : '62%';
+        n.el.style.transform = `translate(-50%, -50%)`;
 
-        // LOGIK AUTO-PLAY untuk peranan lain
-        if (!note.isPlayer && note.dist <= 0 && !note.autoPlayed) {
-            const sound = note.type === 'pak' ? soundPak : soundTung;
-            const clone = sound.cloneNode(); // Guna clone supaya bunyi tak bertindih
-            clone.play();
-            note.autoPlayed = true;
-            note.el.style.filter = 'brightness(2) drop-shadow(0 0 10px white)';
+        // Logik Auto Play (Untuk peranan lain ATAU Mod Auto)
+        const isAutoNeeded = (playerRole === 'auto' || n.role !== playerRole);
+        
+        if (isAutoNeeded && n.dist <= 0 && !n.processed) {
+            triggerSound(n.type);
+            n.processed = true;
+            n.el.style.filter = 'brightness(2)';
+            setTimeout(() => { if(n.el) n.el.remove(); }, 100);
+            notes.splice(i, 1);
+            continue;
         }
 
-        // Buang nota yang dah lepas
-        if (note.dist < -100) {
-            if (note.isPlayer && !note.autoPlayed) { 
-                lives--; // Miss penalty
-                livesDisplay.innerText = lives;
+        // Lepas zon hit
+        if (n.dist < -100) {
+            if (n.role === playerRole && !n.processed) {
+                updateLife(-1);
             }
-            note.el.remove();
+            n.el.remove();
             notes.splice(i, 1);
-            if (lives <= 0) gameOver();
         }
     }
     requestAnimationFrame(gameLoop);
 }
 
-// Event Listeners
-window.addEventListener('keydown', (e) => { 
-    if(!gameActive) return;
-    const key = e.key.toLowerCase();
-    if(key === 'w' || e.key === 'ArrowUp') handleHit('pak');
-    if(key === 's' || e.key === 'ArrowDown') handleHit('tung');
-});
+function triggerSound(type) {
+    const audio = document.getElementById(type === 'pak' ? 'sound-pak' : 'sound-tung');
+    const clone = audio.cloneNode();
+    clone.play();
+}
 
-document.getElementById('hit-area-top').onmousedown = (e) => { e.preventDefault(); handleHit('pak'); };
-document.getElementById('hit-area-bottom').onmousedown = (e) => { e.preventDefault(); handleHit('tung'); };
+function handleHit(type) {
+    // 1. Jangan buat apa-apa jika game belum mula atau dalam mod Auto
+    if (!gameActive || playerRole === 'auto') return;
+    
+    // 2. Mainkan bunyi
+    triggerSound(type);
+    
+    let hitFound = false;
+
+    // 3. Logik semakan hit
+    for (let i = 0; i < notes.length; i++) {
+        let n = notes[i];
+        
+        // Hanya semak nota yang sepadan dengan peranan pemain
+        if (n.role === playerRole && n.type === type && Math.abs(n.dist) < CONFIG.hitZone) {
+            score += 20;
+            document.getElementById('score-val').innerText = score;
+            n.el.remove();
+            notes.splice(i, 1);
+            hitFound = true;
+            flashCircle('#fbbf24'); // Kuning (Tanda Hit)
+            break;
+        }
+    }
+
+    // 4. Jika klik tapi tiada nota dalam zon
+    if (!hitFound) {
+        updateLife(-1);
+        flashCircle('#ef4444'); // Merah (Tanda Miss)
+    }
+}
+
+function updateLife(val) {
+    lives += val;
+    document.getElementById('lives-val').innerText = lives;
+    if (lives <= 0) stopGame();
+}
 
 function flashCircle(color) {
-    gameCircle.style.borderColor = color;
-    gameCircle.classList.add('hit-pulse');
-    setTimeout(() => {
-        gameCircle.style.borderColor = '#432818';
-        gameCircle.classList.remove('hit-pulse');
-    }, 100);
+    const c = document.getElementById('game-circle');
+    c.style.borderColor = color;
+    setTimeout(() => c.style.borderColor = '#432818', 100);
 }
 
-function gameOver() {
+function stopGame() {
     gameActive = false;
     document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-title').innerText = "PERMAINAN TAMAT";
-    document.getElementById('final-score').innerText = "Skor Akhir: " + score;
-    document.getElementById('final-score').classList.remove('hidden');
-    
-    // Sembunyikan semula pemilihan peranan supaya pemain kena pilih lagu balik (atau kekalkan pun boleh)
-    // document.getElementById('role-selection').classList.add('hidden');
+    document.getElementById('status-title').innerText = "TAMAT PERMAINAN";
+    document.getElementById('final-score-display').classList.remove('hidden');
+    document.getElementById('final-score-val').innerText = score;
 }
+
+// Input
+window.addEventListener('keydown', e => {
+    const key = e.key.toLowerCase();
+    if (key === 'w' || key === 'arrowup') handleHit('pak');
+    if (key === 's' || key === 'arrowdown') handleHit('tung');
+});

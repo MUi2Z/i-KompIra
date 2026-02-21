@@ -12,16 +12,26 @@ if (!isset($_SESSION['role']) || strtolower($_SESSION['role']) !== 'admin') {
     exit();
 }
 
-// Fetch data dari jadual 'activities' dengan pengiraan peserta
+// --- LOGIK PAGINATION ---
+$limit = 5; // Bilangan data per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start = ($page > 1) ? ($page * $limit) - $limit : 0;
+
+// 1. Dapatkan jumlah rekod keseluruhan
+$total_results = $conn->query("SELECT COUNT(*) as id FROM activities")->fetch_assoc()['id'];
+$pages = ceil($total_results / $limit);
+
+// 2. Fetch data dengan LIMIT dan OFFSET
 $sql = "SELECT a.*, COUNT(p.participationID) as total_participants 
         FROM activities a 
         LEFT JOIN participations p ON a.activityID = p.activityID 
         GROUP BY a.activityID
-        ORDER BY a.createdAt DESC";
+        ORDER BY a.createdAt DESC 
+        LIMIT $start, $limit";
 $result = $conn->query($sql);
 ?>
 
-<div class="flex min-h-screen">
+<div class="flex min-h-screen bg-gray-50">
     <?php include '../src/components/sidebar_admin.php'; ?>
 
     <main class="flex-1 p-8">
@@ -78,7 +88,7 @@ $result = $conn->query($sql);
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($row['activityTitle']); ?></div>
-                                                <div class="text-xs text-gray-500">Dikemaskini: <?php echo date('d M Y', strtotime($row['updatedAt'])); ?></div>
+                                                <div class="text-xs text-gray-500 uppercase"><?php echo date('d M Y', strtotime($row['updatedAt'])); ?></div>
                                             </div>
                                         </div>
                                     </td>
@@ -89,9 +99,6 @@ $result = $conn->query($sql);
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
-                                            </svg>
                                             <?php echo $row['total_participants']; ?> Peserta
                                         </div>
                                     </td>
@@ -99,37 +106,46 @@ $result = $conn->query($sql);
                                         <div class="flex justify-center gap-3">
                                             <button onclick="openEditModal('editActivityModal', 'editActivityCard', {activityID: '<?php echo $row['activityID']; ?>',activityTitle: '<?php echo addslashes($row['activityTitle']); ?>',activityDesc: '<?php echo addslashes($row['activityDesc']); ?>',imagePath: '../uploads/activities/<?php echo $row['activityThumbnail']; ?>'})" 
                                                     class="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 rounded-lg transition-all">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                                </svg>
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                             </button>
-                                            
+                                            <a href="activity_details.php?id=<?php echo $row['activityID']; ?>" class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition-all">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                            </a>
                                             <a href="../backend/delete_activity.php?id=<?php echo $row['activityID']; ?>" 
-                                               onclick="return confirm('Anda pasti ingin memadam aktiviti ini? Rekod penyertaan juga akan terjejas.')"
-                                               class="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-all" 
-                                               title="Padam Aktiviti">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m4-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                </svg>
+                                               onclick="return confirm('Anda pasti?')"
+                                               class="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-all">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m4-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <tr>
-                                <td colspan="4" class="px-6 py-12 text-center text-gray-400 italic">
-                                    <div class="flex flex-col items-center">
-                                        <svg class="w-12 h-12 mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                        </svg>
-                                        Tiada aktiviti ditemui. Sila tambah aktiviti baru.
-                                    </div>
-                                </td>
-                            </tr>
+                            <tr><td colspan="4" class="px-6 py-12 text-center text-gray-400">Tiada rekod.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="text-sm text-gray-600">
+                    Menunjukkan <span class="font-semibold text-gray-800"><?php echo ($start + 1); ?></span> hingga <span class="font-semibold text-gray-800"><?php echo min($start + $limit, $total_results); ?></span> daripada <span class="font-semibold text-gray-800"><?php echo $total_results; ?></span> entri
+                </div>
+                <div class="flex space-x-2">
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?php echo $page - 1; ?>" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all">Sebelumnya</a>
+                    <?php endif; ?>
+
+                    <?php for ($i = 1; $i <= $pages; $i++): ?>
+                        <a href="?page=<?php echo $i; ?>" class="px-3 py-1 <?php echo ($page == $i) ? 'bg-[#D4A259] text-white border-[#D4A259]' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'; ?> border rounded-md text-sm font-medium shadow-sm transition-all">
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
+
+                    <?php if ($page < $pages): ?>
+                        <a href="?page=<?php echo $page + 1; ?>" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all">Seterusnya</a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </main>
@@ -138,5 +154,4 @@ $result = $conn->query($sql);
 <?php include '../src/components/modal_add_activity.php'; ?>
 <?php include '../src/components/modal_edit_activity.php'; ?>
 <script src="../src/js/modal-logic.js"></script>
-
 <?php include '../src/components/footer.php'; ?>

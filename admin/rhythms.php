@@ -5,20 +5,31 @@ include '../src/components/header.php';
 include '../src/components/navbar.php';
 
 // Kawalan Akses: Hanya Admin
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['role']) || strtolower($_SESSION['role']) !== 'admin') {
     header("Location: ../public/login.php");
     exit();
 }
 
-// Ambil data irama, nama pencipta, dan maklumat baru (audio & difficulty)
+// --- LOGIK PAGINATION ---
+$limit = 10; // Bilangan irama per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start = ($page > 1) ? ($page * $limit) - $limit : 0;
+
+// 1. Dapatkan jumlah rekod keseluruhan irama
+$total_query = $conn->query("SELECT COUNT(*) as id FROM rhythms");
+$total_results = $total_query->fetch_assoc()['id'];
+$pages = ceil($total_results / $limit);
+
+// 2. Ambil data dengan LIMIT dan OFFSET
 $sql = "SELECT r.*, u.userName 
         FROM rhythms r 
         JOIN users u ON r.userID = u.userID 
-        ORDER BY r.created_at DESC";
+        ORDER BY r.created_at DESC
+        LIMIT $start, $limit";
 $result = $conn->query($sql);
 ?>
 
-<div class="flex min-h-screen">
+<div class="flex min-h-screen bg-gray-50">
     <?php include '../src/components/sidebar_admin.php'; ?>
 
     <main class="flex-1 p-8">
@@ -39,6 +50,7 @@ $result = $conn->query($sql);
 
         <?php if (isset($_GET['status'])): ?>
             <div class="mb-6 p-4 rounded-xl border <?php echo ($_GET['status'] == 'success') ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'; ?> flex items-center shadow-sm">
+                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
                 <span class="text-sm font-bold">
                     <?php echo isset($_GET['message']) ? htmlspecialchars($_GET['message']) : 'Operasi berjaya.'; ?>
                 </span>
@@ -63,7 +75,7 @@ $result = $conn->query($sql);
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($row['title']); ?></div>
-                                        <div class="mt-1 flex gap-1">
+                                        <div class="mt-1">
                                             <?php 
                                             $diffColor = [
                                                 'Easy' => 'bg-green-100 text-green-700',
@@ -120,6 +132,28 @@ $result = $conn->query($sql);
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-sm text-gray-600">
+                    Menunjukkan <span class="font-semibold text-gray-800"><?php echo ($total_results > 0) ? ($start + 1) : 0; ?></span> hingga <span class="font-semibold text-gray-800"><?php echo min($start + $limit, $total_results); ?></span> daripada <span class="font-semibold text-gray-800"><?php echo $total_results; ?></span> irama digital
+                </div>
+                
+                <div class="flex items-center space-x-1">
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?php echo $page - 1; ?>" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all">&larr;</a>
+                    <?php endif; ?>
+
+                    <?php for ($i = 1; $i <= $pages; $i++): ?>
+                        <a href="?page=<?php echo $i; ?>" class="px-3 py-1 <?php echo ($page == $i) ? 'bg-[#D4A259] text-white border-[#D4A259]' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'; ?> border rounded-md text-sm font-medium shadow-sm transition-all">
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
+
+                    <?php if ($page < $pages): ?>
+                        <a href="?page=<?php echo $page + 1; ?>" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all">&rarr;</a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </main>

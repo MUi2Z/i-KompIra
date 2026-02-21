@@ -88,7 +88,7 @@
                     
                     <?php if ($role === 'user'): ?>
                         <div>
-                            <button onclick="location.href='register_member.php'" 
+                            <button onclick="location.href='profile.php'" 
                                     class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-xl shadow-md transition animate-bounce">
                                 DAFTAR AHLI SEKARANG
                             </button>
@@ -174,13 +174,13 @@
                                             <div class="flex-1">
                                                 <p class="font-bold text-sm text-gray-800"><?php echo htmlspecialchars($mod['moduleName']); ?></p>
                                             </div>
-                                            <a href="../uploads/modules/<?php echo $mod['moduleDocs']; ?>" target="_blank" class="text-[#D4A259]"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></a>
+                                            <a href="../uploads/modules/docs/<?php echo $mod['moduleDocs']; ?>" target="_blank" class="text-[#D4A259]"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></a>
                                         </div>
                                     <?php endwhile; ?>
                                 </div>
                             <?php else: ?>
                                 <div class="text-center py-6">
-                                    <p class="text-sm text-gray-500 italic">Sila daftar sebagai ahli untuk memuat turun modul pembelajaran.</p>
+                                    <p class="text-sm text-gray-500 ita lic">Sila daftar sebagai ahli untuk memuat turun modul pembelajaran.</p>
                                 </div>
                             <?php endif; ?>
                         </div>

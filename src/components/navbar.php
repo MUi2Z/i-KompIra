@@ -42,12 +42,13 @@ if (isset($_SESSION['userID'])) {
 }
 
 // --- LOGIK SEMBUNYI NAVBAR ---
-// Semak jika URL mengandungi folder '/admin/'
+// Semak jika URL mengandungi folder seperti berikut
 $isAdminFolder = (strpos($_SERVER['PHP_SELF'], '/admin/') !== false);
 $isMemberFolder = (strpos($_SERVER['PHP_SELF'], '/member/') !== false);
+$isPractiseFolder = (strpos($_SERVER['PHP_SELF'], '/practice/') !== false);
 ?>
 
-<?php if (!$isAdminFolder && !$isMemberFolder): // Hanya papar jika BUKAN dalam folder admin atau member ?>
+<?php if (!$isAdminFolder && !$isMemberFolder && !$isPractiseFolder) : // Hanya papar jika BUKAN dalam folder admin atau member ?>
 <nav class="bg-[#E7D8B8] shadow-sm">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
 

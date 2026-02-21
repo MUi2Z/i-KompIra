@@ -3,8 +3,21 @@ include '../config/connection.php';
 include '../src/components/header.php';
 include '../src/components/navbar.php';
 
-// Fetch data dengan kolum baru (createdAt dan moduleThumbnail)
-$sql = "SELECT moduleID, moduleName, moduleDesc, moduleThumbnail, createdAt FROM modules ORDER BY createdAt DESC";
+// --- LOGIK PAGINATION ---
+$limit = 6; // Bilangan modul per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start = ($page > 1) ? ($page * $limit) - $limit : 0;
+
+// 1. Dapatkan jumlah rekod keseluruhan modul
+$total_query = $conn->query("SELECT COUNT(*) as id FROM modules");
+$total_results = $total_query->fetch_assoc()['id'];
+$pages = ceil($total_results / $limit);
+
+// 2. Fetch data dengan LIMIT dan OFFSET
+$sql = "SELECT moduleID, moduleName, moduleDesc, moduleThumbnail, createdAt 
+        FROM modules 
+        ORDER BY createdAt DESC 
+        LIMIT $start, $limit";
 $result = $conn->query($sql);
 
 $modules = [];
@@ -15,7 +28,7 @@ if ($result && $result->num_rows > 0) {
 }
 ?>
 
-<div class="flex min-h-screen">
+<div class="flex min-h-screen bg-gray-50">
     <?php include '../src/components/sidebar_admin.php'; ?>
     
     <div class="flex-1">
@@ -101,13 +114,37 @@ if ($result && $result->num_rows > 0) {
                         </tbody>
                     </table>
                 </div>
+
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        Halaman <span class="font-semibold text-gray-800"><?php echo $page; ?></span> daripada <span class="font-semibold text-gray-800"><?php echo $pages; ?></span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?php echo $page - 1; ?>" class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all shadow-sm">Sebelumnya</a>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $pages; $i++): ?>
+                            <?php if ($i == 1 || $i == $pages || ($i >= $page - 1 && $i <= $page + 1)): ?>
+                                <a href="?page=<?php echo $i; ?>" class="px-3 py-1 border rounded-lg text-sm font-medium transition-all shadow-sm <?php echo ($page == $i) ? 'bg-[#D4A259] text-white border-[#D4A259]' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'; ?>">
+                                    <?php echo $i; ?>
+                                </a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $pages): ?>
+                            <a href="?page=<?php echo $page + 1; ?>" class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all shadow-sm">Seterusnya</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 </div>
 
 <?php 
-include '../src/components/modal_add_module.php'; // Pastikan nama fail modal betul
+include '../src/components/modal_add_module.php'; 
 include '../src/components/footer.php'; 
 ?>
 <script src="../src/js/modal-logic.js"></script>

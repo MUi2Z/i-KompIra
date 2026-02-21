@@ -1,4 +1,4 @@
-{
+[{
   "songTitle": "Rentak Cubaan",
   "bpm": 100,
   "data": [
@@ -40,4 +40,4 @@
     { "time": 14500, "type": "pak", "role": "menganak" },
     { "time": 15000, "type": "tung", "role": "melalu" }
   ]
-}
+}]
