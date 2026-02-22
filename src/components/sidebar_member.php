@@ -21,9 +21,7 @@
 
     <div class="px-6 py-4 flex flex-col items-center border-b border-[#D4A259]/10">
         <div class="h-16 w-16 bg-[#E7D8B8] rounded-full flex items-center justify-center shadow-inner overflow-hidden border-2 border-white">
-             <svg class="h-10 w-10 text-[#D4A259]" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </svg>
+            <img src="../src/img/default_avatar.png" alt="avatar" class="w-20 h-20 object-cover rounded-full">
         </div>
         <p class="sidebar-text mt-2 text-sm font-bold text-gray-700">Member Panel</p>
     </div>

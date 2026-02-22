@@ -194,3 +194,93 @@ window.addEventListener('keydown', e => {
     if (key === 'w' || key === 'arrowup') handleHit('pak');
     if (key === 's' || key === 'arrowdown') handleHit('tung');
 });
+
+
+
+// ----- Tutorial Onboarding ------
+const tutorialSteps = [
+    {
+        title: "Konsep Permainan",
+        desc: "Tekan butang mengikut irama yang jatuh! Anda mempunyai 5 nyawa ❤️. Setiap kali terlepas (Miss), nyawa akan berkurang.",
+        image: "../src/img/tutor_lifeScore.png", // Ganti dengan path gambar anda
+    },
+    {
+        title: "Bezakan Warna Peranan Yang Dipilih",
+        desc: "Warna <span class='text-[#b8860b] font-bold'>EMAS untuk Melalu</span>. Warna <span class='text-[#006400] font-bold'>Hijau untuk Menyilang</span> dan Warna <span class='text-[#8b0000] font-bold'>Merah untuk Menganak</span>. Jika salah, nyawa akan berkurang!",
+        image: "../src/img/tutor_colorMark.png",
+    },
+    {
+        title: "Mode Auto-Play",
+        desc: "Ingin dengar irama sahaja? Hidupkan Mode Auto untuk melihat cara komputer bermain secara sempurna.",
+        image: "../src/img/tutor_autoPlay.png",
+    },
+    {
+        title: "Mula Bermain!",
+        desc: "Sekarang anda sudah bersedia untuk mencuba lagu-lagu yang tersedia. Tekan butang 'MULA MAIN!' untuk memulakan permainan.",
+        image: "../src/img/tutor_start.png",
+    }
+];
+
+
+let currentStep = 0;
+
+function initTutorial() {
+    // Semak jika sudah melihat tutorial dalam sesi ini
+    if (!sessionStorage.getItem('tutorialDone')) {
+        showTutorial();
+    }
+}
+
+function showTutorial() {
+    currentStep = 0;
+    const overlay = document.getElementById('tutorialOverlay');
+    const card = document.getElementById('tutorialCard');
+    
+    overlay.classList.remove('hidden');
+    setTimeout(() => {
+        card.classList.add('tutorial-active');
+        updateTutorialUI();
+    }, 10);
+}
+
+function updateTutorialUI() {
+    const step = tutorialSteps[currentStep];
+    const progress = ((currentStep + 1) / tutorialSteps.length) * 100;
+    
+    // Tukar gambar
+    const imgElement = document.getElementById('tutorialImage');
+    imgElement.style.opacity = '0'; // Animasi pudar keluar
+    
+    setTimeout(() => {
+        imgElement.src = step.image;
+        imgElement.style.opacity = '1'; // Animasi pudar masuk
+    }, 200);
+
+    document.getElementById('tutorialTitle').innerText = step.title;
+    document.getElementById('tutorialDesc').innerHTML = step.desc;
+    document.getElementById('tutorialProgress').style.width = `${progress}%`;
+    document.getElementById('nextTutorialBtn').innerText = currentStep === tutorialSteps.length - 1 ? "MULA MAIN!" : "Seterusnya";
+}
+
+function nextStep() {
+    if (currentStep < tutorialSteps.length - 1) {
+        currentStep++;
+        updateTutorialUI();
+    } else {
+        skipTutorial();
+    }
+}
+
+function skipTutorial() {
+    const overlay = document.getElementById('tutorialOverlay');
+    const card = document.getElementById('tutorialCard');
+    
+    card.classList.remove('tutorial-active');
+    setTimeout(() => {
+        overlay.classList.add('hidden');
+        sessionStorage.setItem('tutorialDone', 'true');
+    }, 300);
+}
+
+// Jalankan auto-init bila page load
+window.addEventListener('DOMContentLoaded', initTutorial);

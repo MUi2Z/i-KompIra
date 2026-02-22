@@ -22,7 +22,7 @@ $participantsQuery = "SELECT m.fullName, m.programme, u.email, p.joinedAt
 $participants = $conn->query($participantsQuery);
 ?>
 
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen">
     <?php include '../src/components/sidebar_admin.php'; ?>
 
     <main class="flex-1 p-8">

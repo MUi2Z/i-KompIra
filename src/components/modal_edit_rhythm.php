@@ -49,7 +49,12 @@
                     </div>
 
                     <div class="space-y-1">
-                        <label class="text-sm font-semibold text-gray-700">Data JSON (Beatmap)</label>
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-gray-700">Data JSON (Beatmap)</label>
+                            <a href="../practice/recorder.php" target="_blank" class="text-xs font-bold text-[#D4A259] hover:underline flex items-center gap-1">
+                                <i class="fas fa-external-link-alt text-[10px]"></i> Buka Recorder
+                            </a>
+                        </div>
                         <textarea name="source" id="edit_source" rows="6" required 
                                   class="w-full px-4 py-2.5 bg-gray-50 text-orange-900 border border-gray-800 rounded-xl font-mono text-xs focus:ring-2 focus:ring-blue-500 outline-none shadow-inner"></textarea>
                     </div>

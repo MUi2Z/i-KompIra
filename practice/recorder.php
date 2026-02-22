@@ -3,8 +3,8 @@ session_start();
 include '../src/components/header.php'; 
 ?>
 
-<audio id="sound-pak" src="../src/sfx/snare.mp3"></audio>
-<audio id="sound-tung" src="../src/sfx/bass-drum.mp3"></audio>
+<audio id="sound-pak" src="../src/sfx/pak.mp3"></audio>
+<audio id="sound-tung" src="../src/sfx/tung.mp3"></audio>
 
 <div class="min-h-screen bg-gray-50 flex flex-col">
     <nav class="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center shadow-sm">

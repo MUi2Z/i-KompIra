@@ -25,6 +25,8 @@
             flex-direction: column;
             background-color: #F4EFE7;
         }
+
+        section { scroll-margin-top: 80px; }
     </style>
 
     <?php

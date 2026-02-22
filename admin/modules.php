@@ -28,7 +28,7 @@ if ($result && $result->num_rows > 0) {
 }
 ?>
 
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen">
     <?php include '../src/components/sidebar_admin.php'; ?>
     
     <div class="flex-1">

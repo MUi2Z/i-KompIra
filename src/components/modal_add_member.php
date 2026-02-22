@@ -89,6 +89,7 @@
                             <option value="">-- Pilih Jenis Irama --</option>
                             <option value="Melalu">Melalu</option>
                             <option value="Menyilang">Menyilang</option>
+                            <option value="Menganak">Menganak</option>
                         </select>
                     </div>
                 </div>

@@ -61,9 +61,7 @@
             <div class="my-4 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="flex flex-col lg:flex-row items-center gap-6">
                     <div class="w-24 h-24 <?php echo ($role === 'member') ? 'bg-[#E7D8B8]' : 'bg-gray-200'; ?> rounded-full flex items-center justify-center border-4 border-white shadow-md">
-                        <svg class="w-16 h-16 <?php echo ($role === 'member') ? 'text-[#D4A259]' : 'text-gray-400'; ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
+                        <img src="../src/img/default_avatar.png" alt="avatar" class="w-28 h-28 object-cover rounded-full">
                     </div>
                     
                     <div class="flex-1 text-center lg:text-left">
@@ -153,7 +151,7 @@
                             <h3 class="text-xl font-bold mb-2">Latihan Interaktif</h3>
                             <p class="text-sm opacity-90 mb-4 max-w-xs text-gray-600">Tingkatkan kemahiran ketukan kompang anda.</p>
                             <?php if ($role === 'member'): ?>
-                                <a href="practice.php" class="inline-block bg-yellow-800 text-white px-6 py-2 rounded-xl font-bold text-sm hover:shadow-lg transition">MULA LATIHAN</a>
+                                <a href="../practice/index.php" class="inline-block bg-yellow-800 text-white px-6 py-2 rounded-xl font-bold text-sm hover:shadow-lg transition">MULA LATIHAN</a>
                             <?php else: ?>
                                 <button onclick="alert('Sila daftar sebagai ahli untuk akses latihan interaktif.')" class="bg-gray-400 text-white px-6 py-2 rounded-xl font-bold text-sm cursor-not-allowed">DISEKAT (AHLI SAHAJA)</button>
                             <?php endif; ?>

@@ -71,6 +71,9 @@ $result = mysqli_query($conn, $query);
 
     <div id="overlay" class="fixed inset-0 z-50 flex items-center justify-center flex-col gap-8 text-center px-4 overlay-light">
         <div id="selection-container" class="w-full max-w-2xl">
+            <button onclick="showTutorial()" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-500 hover:text-[#D4A259] hover:border-[#D4A259] transition-all">
+                <i class="fas fa-question-circle"></i> Tutorial Bermain
+            </button>
             <h2 id="status-title" class="text-4xl font-black text-[#7f5539] mb-8 uppercase tracking-tighter">Pilih Irama Kompang</h2>
             
             <div id="final-score-display" class="hidden mb-6 p-4 bg-orange-100 rounded-lg">
@@ -129,10 +132,43 @@ $result = mysqli_query($conn, $query);
         <div class="absolute left-1/2 h-full w-[2px] bg-black/5 -translate-x-1/2"></div>
     </div>
 
-    <audio id="sound-pak" src="../src/sfx/snare.mp3"></audio>
-    <audio id="sound-tung" src="../src/sfx/bass-drum.mp3"></audio>
+    <audio id="sound-pak" src="../src/sfx/pak.mp3"></audio>
+    <audio id="sound-tung" src="../src/sfx/tung.mp3"></audio>
 
     <script src="../src/js/game.js"></script>
 </div>
+
+<div id="tutorialOverlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md hidden transition-opacity duration-500">
+    <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl transform transition-all scale-95 opacity-0" id="tutorialCard">
+        
+        <div class="h-1.5 w-full bg-gray-100 flex">
+            <div id="tutorialProgress" class="h-full bg-[#D4A259] transition-all duration-300" style="width: 20%"></div>
+        </div>
+
+        <div class="p-8 text-center">
+            <div id="tutorialVisualContainer" class="w-full h-48 mx-auto mb-6 bg-gray-50 rounded-2xl flex items-center justify-center overflow-hidden border border-gray-100 shadow-inner">
+                <img id="tutorialImage" src="" class="w-full h-full object-contain p-4 transition-all duration-500" alt="Tutorial Visual">
+            </div>
+
+            <h2 id="tutorialTitle" class="text-2xl font-black text-gray-800 mb-2 uppercase tracking-tight">Selamat Datang!</h2>
+            <p id="tutorialDesc" class="text-gray-600 leading-relaxed mb-8">Mari belajar cara bermain Kompang Digital dalam masa 1 minit.</p>
+
+            <div class="flex items-center justify-between gap-4">
+                <button onclick="skipTutorial()" class="text-sm font-bold text-gray-400 hover:text-red-500 transition-colors uppercase tracking-widest">Skip</button>
+                
+                <div class="flex gap-2" id="tutorialDots">
+                    </div>
+
+                <button id="nextTutorialBtn" onclick="nextStep()" class="px-8 py-3 bg-[#D4A259] text-white font-black rounded-xl shadow-lg hover:bg-[#b88a4a] transition-all uppercase tracking-widest">
+                    Seterusnya
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tutorial-active { opacity: 1 !important; transform: scale(1) !important; }
+</style>
 
 <?php include '../src/components/footer.php'; ?>
