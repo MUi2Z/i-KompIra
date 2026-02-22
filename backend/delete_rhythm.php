@@ -2,49 +2,29 @@
 session_start();
 include_once '../config/connection.php';
 
-// 1. Kawalan Akses: Hanya Admin
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+// Kawalan Akses: Hanya Admin
+if (!isset($_SESSION['role']) || strtolower($_SESSION['role']) !== 'admin') {
     header("Location: ../public/login.php");
     exit();
 }
 
+// Ambil ID dari URL
 if (isset($_GET['id'])) {
-    $rhythmID = (int)$_GET['id'];
-    $targetDir = "../uploads/rhythms/";
+    $rhythmID = mysqli_real_escape_string($conn, $_GET['id']);
 
-    // 2. Ambil nama fail MIDI sebelum rekod dipadam
-    $sqlFetch = "SELECT midiSrc FROM rhythms WHERE rhythmID = ?";
-    $stmtFetch = $conn->prepare($sqlFetch);
-    $stmtFetch->bind_param("i", $rhythmID);
-    $stmtFetch->execute();
-    $result = $stmtFetch->get_result();
+    // SQL Delete
+    $sql = "DELETE FROM rhythms WHERE rhythmID = '$rhythmID'";
 
-    if ($result->num_rows > 0) {
-        $rhythm = $result->fetch_assoc();
-        $midiFile = $rhythm['midiSrc'];
-
-        // 3. Padam rekod dari pangkalan data
-        $sqlDelete = "DELETE FROM rhythms WHERE rhythmID = ?";
-        $stmtDelete = $conn->prepare($sqlDelete);
-        $stmtDelete->bind_param("i", $rhythmID);
-
-        if ($stmtDelete->execute()) {
-            // 4. Padam fail fizikal (.mid) dari server jika wujud
-            if (!empty($midiFile) && file_exists($targetDir . $midiFile)) {
-                unlink($targetDir . $midiFile);
-            }
-
-            header("Location: ../admin/rhythms.php?status=success&message=Irama+berjaya+dipadam+secara+kekal.");
-        } else {
-            header("Location: ../admin/rhythms.php?status=error&message=Gagal+memadam+rekod+irama.");
-        }
-        $stmtDelete->close();
+    if ($conn->query($sql)) {
+        // Berjaya padam, kembali ke senarai dengan mesej kejayaan
+        header("Location: ../admin/rhythms.php?status=success&message=Irama berjaya dipadamkan!");
     } else {
-        header("Location: ../admin/rhythms.php?status=error&message=Irama+tidak+ditemui.");
+        // Gagal padam
+        header("Location: ../admin/rhythms.php?status=error&message=Gagal memadam irama: " . $conn->error);
     }
-
-    $stmtFetch->close();
-    $conn->close();
 } else {
-    header("Location: ../admin/rhythms.php?status=error&message=ID+irama+tidak+sah.");
+    header("Location: ../admin/rhythms.php");
 }
+
+$conn->close();
+?>

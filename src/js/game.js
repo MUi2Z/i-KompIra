@@ -1,9 +1,10 @@
 let BEATMAP = [];
 let currentRawData = null;
-let playerRole = ''; // 'melalu', 'menyilang', 'menganak', 'auto'
+let playerRole = '';
 let gameActive = false;
 let notes = [];
 let gameTime = 0;
+let lastTimestamp = 0;
 let score = 0;
 let lives = 5;
 
@@ -14,25 +15,28 @@ const CONFIG = {
 };
 
 function handleSongSelection(el) {
-    // Ambil string JSON dari atribut data-source
     const rawJson = el.getAttribute('data-source');
     const speed = el.getAttribute('data-speed');
-
-    console.log("Mencuba parse JSON...");
-
     try {
-        currentRawData = JSON.parse(rawJson);
-        CONFIG.speed = parseInt(speed);
+        const parsed = JSON.parse(rawJson);
+        if (Array.isArray(parsed) && parsed[0].data) {
+            currentRawData = parsed[0].data;
+        } else if (parsed.data) {
+            currentRawData = parsed.data;
+        } else if (Array.isArray(parsed)) {
+            currentRawData = parsed;
+        }
 
-        // Visual feedback
+        if (!currentRawData || !Array.isArray(currentRawData)) {
+            throw new Error("Data nota tidak dijumpai.");
+        }
+
+        CONFIG.speed = parseInt(speed);
         document.querySelectorAll('.btn-song').forEach(b => b.classList.remove('btn-active'));
         el.classList.add('btn-active');
-        
         document.getElementById('role-selection').classList.remove('hidden');
-        console.log("Berjaya!");
     } catch(e) { 
-        console.error("Ralat Parse JSON:", e);
-        alert("Data JSON dalam database tidak sah. Sila semak format JSON anda."); 
+        alert("Ralat JSON: " + e.message); 
     }
 }
 
@@ -42,12 +46,11 @@ function startGame(role) {
     score = 0;
     lives = 5;
     gameTime = 0;
+    lastTimestamp = performance.now();
     notes = [];
     document.getElementById('notes-layer').innerHTML = '';
     
-    // Reset data spawn
     BEATMAP = currentRawData.map(n => ({ ...n, spawned: false }));
-
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('display-mode').innerText = `MOD: ${role}`;
     
@@ -58,68 +61,62 @@ function startGame(role) {
     } else {
         document.getElementById('game-stats').style.opacity = '0';
     }
-
     requestAnimationFrame(gameLoop);
 }
 
 function createNote(data) {
     const el = document.createElement('div');
     const isPlayerNote = (data.role === playerRole);
-    
-    // Set style mengikut peranan dan jenis pukulan
     el.className = `indicator-note role-${data.role} ${data.type === 'pak' ? 'tri-up' : 'tri-down'}`;
     
     if (playerRole !== 'auto') {
         if (isPlayerNote) el.classList.add('player-target');
         else el.classList.add('note-ghost');
     }
-
     document.getElementById('notes-layer').appendChild(el);
-    
-    notes.push({
-        ...data,
-        el,
-        dist: 500,
-        processed: false
-    });
+    notes.push({ ...data, el, processed: false });
 }
 
-function gameLoop() {
+function gameLoop(timestamp) {
     if (!gameActive) return;
-    gameTime += 16.67;
+    const deltaTime = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+    gameTime += deltaTime;
 
-    // Logik Spawn (Menyokong nota serentak)
     BEATMAP.forEach(item => {
         if (!item.spawned && gameTime >= (item.time - CONFIG.spawnOffset)) {
-            createNote(item);
-            item.spawned = true;
+            if (item.type === 'finish') {
+                item.spawned = true;
+                setTimeout(() => { if(gameActive) stopGame(); }, 1500);
+            } else {
+                createNote(item);
+                item.spawned = true;
+            }
         }
     });
 
     for (let i = notes.length - 1; i >= 0; i--) {
         let n = notes[i];
-        n.dist -= CONFIG.speed;
+        const timeRemaining = n.time - gameTime;
+        n.dist = (timeRemaining / 1000) * (CONFIG.speed * 100); 
 
         n.el.style.left = `calc(50% + ${n.dist}px)`;
         n.el.style.top = (n.type === 'pak') ? '38%' : '62%';
-        n.el.style.transform = `translate(-50%, -50%)`;
 
-        // Logik Auto Play (Untuk peranan lain ATAU Mod Auto)
-        const isAutoNeeded = (playerRole === 'auto' || n.role !== playerRole);
-        
-        if (isAutoNeeded && n.dist <= 0 && !n.processed) {
+        const isAuto = (playerRole === 'auto' || n.role !== playerRole);
+        if (isAuto && n.dist <= 0 && !n.processed) {
             triggerSound(n.type);
             n.processed = true;
-            n.el.style.filter = 'brightness(2)';
+            n.el.style.filter = 'brightness(2) scale(1.2)';
             setTimeout(() => { if(n.el) n.el.remove(); }, 100);
             notes.splice(i, 1);
             continue;
         }
 
-        // Lepas zon hit
-        if (n.dist < -100) {
+        if (n.dist < -150) {
+            // Jika nota milik pemain meluncur keluar tanpa di-hit
             if (n.role === playerRole && !n.processed) {
-                updateLife(-1);
+                updateLife(-1); // Missed!
             }
             n.el.remove();
             notes.splice(i, 1);
@@ -135,34 +132,37 @@ function triggerSound(type) {
 }
 
 function handleHit(type) {
-    // 1. Jangan buat apa-apa jika game belum mula atau dalam mod Auto
     if (!gameActive || playerRole === 'auto') return;
     
-    // 2. Mainkan bunyi
     triggerSound(type);
-    
     let hitFound = false;
 
-    // 3. Logik semakan hit
     for (let i = 0; i < notes.length; i++) {
         let n = notes[i];
         
-        // Hanya semak nota yang sepadan dengan peranan pemain
-        if (n.role === playerRole && n.type === type && Math.abs(n.dist) < CONFIG.hitZone) {
-            score += 20;
-            document.getElementById('score-val').innerText = score;
-            n.el.remove();
-            notes.splice(i, 1);
-            hitFound = true;
-            flashCircle('#fbbf24'); // Kuning (Tanda Hit)
-            break;
+        // Kita hanya proses nota yang belum di-hit/diproses
+        if (n.role === playerRole && n.type === type && !n.processed) {
+            const distance = Math.abs(n.dist);
+            
+            if (distance < CONFIG.hitZone) {
+                score += 20;
+                document.getElementById('score-val').innerText = score;
+                
+                n.processed = true; // Tandakan dah kena
+                n.el.remove();
+                notes.splice(i, 1);
+                
+                hitFound = true;
+                flashCircle('#fbbf24'); // Kuning/Emas (Hit!)
+                break; 
+            }
         }
     }
 
-    // 4. Jika klik tapi tiada nota dalam zon
+    // Hanya tolak nyawa kalau pemain "salah tekan" (tiada nota langsung dekat situ)
     if (!hitFound) {
         updateLife(-1);
-        flashCircle('#ef4444'); // Merah (Tanda Miss)
+        flashCircle('#ef4444'); // Merah (Salah!)
     }
 }
 
@@ -174,8 +174,10 @@ function updateLife(val) {
 
 function flashCircle(color) {
     const c = document.getElementById('game-circle');
-    c.style.borderColor = color;
-    setTimeout(() => c.style.borderColor = '#432818', 100);
+    if(c) {
+        c.style.borderColor = color;
+        setTimeout(() => c.style.borderColor = '#432818', 100);
+    }
 }
 
 function stopGame() {
@@ -186,7 +188,7 @@ function stopGame() {
     document.getElementById('final-score-val').innerText = score;
 }
 
-// Input
+// Input Keyboard
 window.addEventListener('keydown', e => {
     const key = e.key.toLowerCase();
     if (key === 'w' || key === 'arrowup') handleHit('pak');

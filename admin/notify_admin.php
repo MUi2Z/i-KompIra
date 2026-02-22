@@ -1,13 +1,21 @@
 <?php
-// notify_admin.php
-function notifyAdminNewApplication($userID, $fullName, $conn) {
-    $notif_sql = "INSERT INTO admin_notifications (userID, type, message, is_read) 
-                  VALUES (?, 'new_member', ?, 0)";
+// admin/notify_admin.php
+
+function notifyAdminNewApplication($userID, $fullName, $NRIC, $conn) {
+    $type = 'membership_application';
+    $title = 'Permohonan Ahli Baru';
+    $message = "Pengguna $fullName ($NRIC) telah menghantar permohonan menjadi ahli baru.";
     
-    $notif_stmt = $conn->prepare($notif_sql);
-    $message = "Permohonan ahli baru dari: " . $fullName . " (Masa: " . date('d/m/Y H:i:s') . ")";
+    // Pastikan susunan kolum sama dengan struktur table anda
+    $sql = "INSERT INTO admin_notifications (userID, type, title, message, is_read, created_at) 
+            VALUES (?, ?, ?, ?, 0, NOW())";
+            
+    $stmt = $conn->prepare($sql);
     
-    $notif_stmt->bind_param("is", $userID, $message);
-    return $notif_stmt->execute();
+    if ($stmt) {
+        $stmt->bind_param("isss", $userID, $type, $title, $message);
+        return $stmt->execute();
+    }
+    
+    return false;
 }
-?>

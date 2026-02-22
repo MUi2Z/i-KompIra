@@ -142,8 +142,42 @@ $result = $conn->query($sql);
                     <?php if ($page < $pages): ?>
                         <a href="?page=<?php echo $page + 1; ?>" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all">&rarr;</a>
                     <?php endif; ?>
+            <script>
+            function toggleModal(modalId, cardId) {
+                const modal = document.getElementById(modalId);
+                const card = document.getElementById(cardId);
+                
+                if (modal.classList.contains('hidden')) {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.remove('pointer-events-none');
+                        card.classList.remove('scale-95', 'opacity-0', 'translate-y-4');
+                    }, 10);
+                } else {
+                    card.classList.add('scale-95', 'opacity-0', 'translate-y-4');
+                    setTimeout(() => {
+                        modal.classList.add('hidden', 'pointer-events-none');
+                    }, 300);
+                }
+            }
+            
+            function openEditModal(data, profileID) {
+                // Isi data ke dalam form modal
+                document.getElementById('edit_profileID').value = profileID;
+                document.getElementById('edit_userID').value = <?= $userID; ?>; // UserID dari session
+                document.getElementById('edit_email').value = data.email;
+                document.getElementById('edit_fullName').value = data.fullName;
+                document.getElementById('edit_NRIC').value = data.NRIC;
+                document.getElementById('edit_kohort').value = data.kohort;
+                document.getElementById('edit_programme').value = data.programme;
+                document.getElementById('edit_beatRoleType').value = data.beatRoleType;
+            
+                toggleModal('editMemberModal', 'editMemberCard');
+            }
+            </script>
                 </div>
             </div>
+
         </div>
     </main>
 </div>

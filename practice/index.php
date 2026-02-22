@@ -129,8 +129,8 @@ $result = mysqli_query($conn, $query);
         <div class="absolute left-1/2 h-full w-[2px] bg-black/5 -translate-x-1/2"></div>
     </div>
 
-    <audio id="sound-pak" src="https://www.myinstants.com/media/sounds/snare.mp3"></audio>
-    <audio id="sound-tung" src="https://www.myinstants.com/media/sounds/bass-drum.mp3"></audio>
+    <audio id="sound-pak" src="../src/sfx/snare.mp3"></audio>
+    <audio id="sound-tung" src="../src/sfx/bass-drum.mp3"></audio>
 
     <script src="../src/js/game.js"></script>
 </div>

@@ -191,3 +191,5 @@
         </main>
     </div>
 </div>
+
+<?php include '../src/components/footer.php'; ?>

@@ -1,43 +1,47 @@
-[{
-  "songTitle": "Rentak Cubaan",
-  "bpm": 100,
-  "data": [
-    { "time": 1000, "type": "pak", "role": "melalu" },
-    { "time": 2000, "type": "tung", "role": "melalu" },
-    { "time": 3000, "type": "pak", "role": "melalu" },
-    { "time": 4000, "type": "tung", "role": "melalu" },
+[
+  {
+    "songTitle": "Rentak Cubaan",
+    "bpm": 100,
+    "data": [
+      { "time": 1000, "type": "pak", "role": "melalu" },
+      { "time": 2000, "type": "tung", "role": "melalu" },
+      { "time": 3000, "type": "pak", "role": "melalu" },
+      { "time": 4000, "type": "tung", "role": "melalu" },
+    
+      { "time": 4500, "type": "pak", "role": "menyilang" },
+      { "time": 5000, "type": "tung", "role": "melalu" },
+      { "time": 5500, "type": "pak", "role": "menyilang" },
+      { "time": 6000, "type": "pak", "role": "melalu" },
+    
+      { "time": 6250, "type": "tung", "role": "menganak" },
+      { "time": 6500, "type": "tung", "role": "menganak" },
+      { "time": 6750, "type": "tung", "role": "menganak" },
+      { "time": 7000, "type": "pak", "role": "melalu" },
+    
+      { "time": 8000, "type": "pak", "role": "melalu" },
+      { "time": 8000, "type": "pak", "role": "menyilang" },
+      { "time": 8250, "type": "tung", "role": "menganak" },
+      { "time": 8500, "type": "tung", "role": "melalu" },
+      { "time": 8750, "type": "tung", "role": "menganak" },
+    
+      { "time": 9500, "type": "pak", "role": "menyilang" },
+      { "time": 9750, "type": "pak", "role": "menyilang" },
+      { "time": 10000, "type": "tung", "role": "melalu" },
+      { "time": 10250, "type": "pak", "role": "menyilang" },
+    
+      { "time": 11000, "type": "pak", "role": "melalu" },
+      { "time": 11200, "type": "tung", "role": "menganak" },
+      { "time": 11400, "type": "tung", "role": "menganak" },
+      { "time": 11600, "type": "tung", "role": "menganak" },
+      { "time": 12000, "type": "tung", "role": "melalu" },
+    
+      { "time": 13000, "type": "pak", "role": "melalu" },
+      { "time": 13500, "type": "pak", "role": "menyilang" },
+      { "time": 14000, "type": "tung", "role": "melalu" },
+      { "time": 14500, "type": "pak", "role": "menganak" },
+      { "time": 15000, "type": "tung", "role": "melalu" },
 
-    { "time": 4500, "type": "pak", "role": "menyilang" },
-    { "time": 5000, "type": "tung", "role": "melalu" },
-    { "time": 5500, "type": "pak", "role": "menyilang" },
-    { "time": 6000, "type": "pak", "role": "melalu" },
-
-    { "time": 6250, "type": "tung", "role": "menganak" },
-    { "time": 6500, "type": "tung", "role": "menganak" },
-    { "time": 6750, "type": "tung", "role": "menganak" },
-    { "time": 7000, "type": "pak", "role": "melalu" },
-
-    { "time": 8000, "type": "pak", "role": "melalu" },
-    { "time": 8000, "type": "pak", "role": "menyilang" },
-    { "time": 8250, "type": "tung", "role": "menganak" },
-    { "time": 8500, "type": "tung", "role": "melalu" },
-    { "time": 8750, "type": "tung", "role": "menganak" },
-
-    { "time": 9500, "type": "pak", "role": "menyilang" },
-    { "time": 9750, "type": "pak", "role": "menyilang" },
-    { "time": 10000, "type": "tung", "role": "melalu" },
-    { "time": 10250, "type": "pak", "role": "menyilang" },
-
-    { "time": 11000, "type": "pak", "role": "melalu" },
-    { "time": 11200, "type": "tung", "role": "menganak" },
-    { "time": 11400, "type": "tung", "role": "menganak" },
-    { "time": 11600, "type": "tung", "role": "menganak" },
-    { "time": 12000, "type": "tung", "role": "melalu" },
-
-    { "time": 13000, "type": "pak", "role": "melalu" },
-    { "time": 13500, "type": "pak", "role": "menyilang" },
-    { "time": 14000, "type": "tung", "role": "melalu" },
-    { "time": 14500, "type": "pak", "role": "menganak" },
-    { "time": 15000, "type": "tung", "role": "melalu" }
-  ]
-}]
+      { "time": 29000, "type": "finish" }
+    ]
+  }
+]

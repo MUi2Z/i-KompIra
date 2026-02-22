@@ -4,14 +4,21 @@
     include '../src/components/header.php';
     include '../src/components/navbar.php';
 
+    
     if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         // Jika bukan admin, tendang ke login atau home
         header("Location: ../public/login.php"); exit(); 
-    }
-
+        }
+        
     // Get statistics
     $stats = [];
-
+    
+    $adminID = $_SESSION['userID'];
+    $admin_data_query = "SELECT userName, email FROM users WHERE userID = $adminID";
+    $admin_data = $conn->query($admin_data_query)->fetch_assoc();
+    $currentUserName = $admin_data['userName'];
+    $currentEmail = $admin_data['email'];
+        
     // Count pending member requests
     $pending_query = "SELECT COUNT(*) as count FROM members WHERE status = 'pending'";
     $pending_result = $conn->query($pending_query);
@@ -92,42 +99,33 @@
             <!-- Profile Header -->
             <div class="my-4 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="flex flex-col lg:flex-row items-center gap-6">
-                    <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center border-4 border-white shadow-md">
-                        <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
+                    <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                        <span class="text-2xl font-bold text-amber-600"><?php echo strtoupper(substr($currentUserName, 0, 1)); ?></span>
                     </div>
-                    
-                    <div class="flex-1">
-                        <div class="text-center lg:text-left">
-                            <h2 class="text-xl font-bold text-gray-800">Admin Dashboard</h2>
-                            <p class="text-gray-600 mt-1">Sistem Pengurusan i-KompIra</p>
-                            
-                            <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                                    <p class="font-semibold text-gray-700 sm:text-right sm:col-span-1">EMAIL :</p>
-                                    <p class="display-field-bg border border-gray-300 rounded-md p-2 shadow-inner w-full truncate sm:col-span-2">
-                                        <?php echo $_SESSION['email'] ?? 'admin@i-kompira.com'; ?>
-                                    </p>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                                    <p class="font-semibold text-gray-700 sm:text-right sm:col-span-1">STATUS :</p>
-                                    <p class="display-field-bg border border-gray-300 rounded-md p-2 shadow-inner w-full sm:col-span-2">
-                                        <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">Admin Aktif</span>
-                                    </p>
-                                </div>
+
+                    <div class="flex-1 text-center lg:text-left">
+                        <h2 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($currentUserName); ?></h2>
+                        <p class="text-gray-500 text-sm">Administrator i-KompIra</p>
+
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <span class="font-bold">ID:</span> #ADM-<?php echo $adminID; ?>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <span class="font-bold">EMAIL:</span> <?php echo htmlspecialchars($currentEmail); ?>
                             </div>
                         </div>
                     </div>
-                    
-                    <div>
-                        <button onclick="location.href='edit_profile.php'" 
-                                class="bg-[#6A8D73] hover:bg-[#5a7d63] text-white font-bold py-2 px-6 rounded-md shadow-md transition">
-                            EDIT PROFIL
-                        </button>
-                    </div>
+
+                    <button onclick="toggleModal('modalEditProfile')" 
+                            class="bg-[#6A8D73] hover:bg-[#5a7d63] text-white font-bold py-2 px-6 rounded-md shadow-md transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                        EDIT PROFIL
+                    </button>
                 </div>
             </div>
+
+            <?php include '../src/components/modal_edit_profile.php'; ?>
     
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -384,5 +382,7 @@ const participationChart = new Chart(ctx, {
     }
 });
 </script>
+
+<!-- <script src="../src/js/modal-logic.js"></script> -->
 
 <?php include '../src/components/footer.php'; ?>

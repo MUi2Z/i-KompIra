@@ -77,7 +77,8 @@ $result = $conn->query($sql);
                         </p>
                         
                         <?php if($activity['is_joined'] > 0): ?>
-                            <form action="../backend/process_cancel_participate.php" method="POST" onsubmit="return confirm('Adakah anda pasti ingin membatalkan penyertaan ini?');">
+                            <form action="../backend/process_cancel_participate.php" method="POST" 
+                                  onsubmit="return confirm('Adakah anda pasti ingin MEMBATALKAN penyertaan bagi aktiviti: <?php echo addslashes($activity['activityTitle']); ?>?');">
                                 <input type="hidden" name="activityID" value="<?php echo $activity['activityID']; ?>">
                                 <button type="submit" class="w-full py-3 bg-red-50 text-red-500 rounded-xl font-bold hover:bg-red-600 hover:text-white transition-all duration-200 flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -85,7 +86,8 @@ $result = $conn->query($sql);
                                 </button>
                             </form>
                         <?php else: ?>
-                            <form action="../backend/process_join_activity.php" method="POST">
+                            <form action="../backend/process_join_activity.php" method="POST" 
+                                  onsubmit="return confirm('Adakah anda ingin MENYERTAI aktiviti: <?php echo addslashes($activity['activityTitle']); ?>?');">
                                 <input type="hidden" name="activityID" value="<?php echo $activity['activityID']; ?>">
                                 <button type="submit" class="w-full py-3 bg-[#D4A259] text-white rounded-xl font-bold hover:bg-[#b88a4a] hover:shadow-lg hover:shadow-amber-200 transition-all duration-200 flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
