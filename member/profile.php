@@ -63,7 +63,7 @@ if ($userData['role'] == 'user') {
                 <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
                     <div class="flex flex-col lg:flex-row items-center gap-6">
                         <div class="h-24 w-24 rounded-full overflow-hidden border-4 border-[#E7D8B8] shadow-sm">
-                            <img src="../src/img/default_pfp.png" alt="Profile Picture" class="h-full w-full object-cover">
+                            <img src="../src/img/default_avatar.png" alt="Profile Picture" class="h-full w-full object-cover">
                         </div>
 
                         <div class="text-center lg:text-left">
