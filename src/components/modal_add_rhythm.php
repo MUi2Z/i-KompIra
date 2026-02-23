@@ -35,18 +35,18 @@
 
                         <div class="space-y-1">
                             <label class="text-sm font-semibold text-gray-700">Tahap Kesukaran</label>
-                            <select name="difficulty" 
+                            <select id="add_difficulty" name="difficulty" 
                                     class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] focus:bg-white outline-none transition-all">
-                                <option value="Easy">Mudah</option>
-                                <option value="Medium">Sederhana</option>
-                                <option value="Hard">Sukar</option>
+                                <option value="Mudah">Mudah</option>
+                                <option value="Sederhana">Sederhana</option>
+                                <option value="Sukar">Sukar</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Huraian Irama</label>
-                        <textarea name="description" rows="2" 
+                        <textarea id="add_description" name="description" rows="2" 
                                   placeholder="Terangkan kegunaan irama ini..."
                                   class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] focus:bg-white outline-none transition-all"></textarea>
                     </div>

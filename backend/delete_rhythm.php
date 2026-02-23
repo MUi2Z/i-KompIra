@@ -1,30 +1,38 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include_once '../config/connection.php';
 
-// Kawalan Akses: Hanya Admin
+// Kawalan Akses: Hanya Admin yang boleh padam
 if (!isset($_SESSION['role']) || strtolower($_SESSION['role']) !== 'admin') {
     header("Location: ../public/login.php");
     exit();
 }
 
-// Ambil ID dari URL
+// Semak jika ID wujud dalam URL
 if (isset($_GET['id'])) {
-    $rhythmID = mysqli_real_escape_string($conn, $_GET['id']);
+    $id = intval($_GET['id']);
 
-    // SQL Delete
-    $sql = "DELETE FROM rhythms WHERE rhythmID = '$rhythmID'";
+    // Gunakan Prepared Statement untuk keselamatan
+    $sql = "DELETE FROM rhythms WHERE rhythmID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
 
-    if ($conn->query($sql)) {
-        // Berjaya padam, kembali ke senarai dengan mesej kejayaan
-        header("Location: ../admin/rhythms.php?status=success&message=Irama berjaya dipadamkan!");
+    if ($stmt->execute()) {
+        // Jika berjaya padam
+        header("Location: ../admin/rhythms.php?status=success&message=Irama berjaya dipadam secara kekal.");
     } else {
-        // Gagal padam
-        header("Location: ../admin/rhythms.php?status=error&message=Gagal memadam irama: " . $conn->error);
+        // Jika gagal (mungkin ada masalah kekangan kunci asing)
+        header("Location: ../admin/rhythms.php?status=error&message=Gagal memadam irama: " . $stmt->error);
     }
+
+    $stmt->close();
 } else {
-    header("Location: ../admin/rhythms.php");
+    // Jika ID tidak dihantar
+    header("Location: ../admin/rhythms.php?status=error&message=ID irama tidak sah.");
 }
 
 $conn->close();
+exit();
 ?>

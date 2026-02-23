@@ -24,7 +24,7 @@ $pages = ceil($total_results / $limit);
 $sql = "SELECT r.*, u.userName 
         FROM rhythms r 
         JOIN users u ON r.userID = u.userID 
-        ORDER BY r.created_at DESC
+        ORDER BY r.created_at DESC 
         LIMIT $start, $limit";
 $result = $conn->query($sql);
 ?>
@@ -94,7 +94,7 @@ $result = $conn->query($sql);
                                                 <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2"></path>
                                             </svg>
                                         </button>
-                                        <a href="../backend/process_delete_rhythm.php?id=<?php echo $row['rhythmID']; ?>" 
+                                        <a href="../backend/delete_rhythm.php?id=<?php echo $row['rhythmID']; ?>" 
                                            onclick="return confirm('Adakah anda pasti mahu memadam irama ini? Semak semula sebelum padam.')"
                                            class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                            title="Padam Irama">

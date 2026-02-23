@@ -1,21 +1,34 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 include_once '../config/connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $title = mysqli_real_escape_string($conn, $_POST['title']);
-    $beatSpeed = intval($_POST['beatSpeed']);
-    $difficulty = mysqli_real_escape_string($conn, $_POST['difficulty']);
-    $source = mysqli_real_escape_string($conn, $_POST['source']); // Ambil JSON mentah
-    $userID = $_SESSION['userID'];
+    $title = $_POST['title'] ?? '';
+    $description = $_POST['description'] ?? null;
+    $beatSpeed = intval($_POST['beatSpeed'] ?? 5);
+    $source = $_POST['source'] ?? ''; 
+    $difficulty = $_POST['difficulty'] ?? 'Mudah';
+    $userID = intval($_SESSION['userID'] ?? 0);
 
-    // Simpan ke DB
-    $sql = "INSERT INTO rhythms (title, beatSpeed, difficulty, source, userID, created_at) 
-            VALUES ('$title', $beatSpeed, '$difficulty', '$source', $userID, NOW())";
+    // Semak jika JSON kosong
+    if (empty($source) || strlen($source) < 5) {
+        die("Ralat: Data JSON tidak sah atau terlalu pendek.");
+    }
 
-    if ($conn->query($sql)) {
-        header("Location: ../admin/rhythms.php?status=success&message=Irama baru berjaya ditambah!");
+    // Pastikan susunan bind_param sepadan dengan susunan VALUES dalam SQL
+    $sql = "INSERT INTO rhythms (title, description, beatSpeed, source, difficulty, userID, created_at, updated_at) 
+            VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())";
+    
+    $stmt = $conn->prepare($sql);
+    
+    // Jenis data: 
+    // s (title), s (description), i (beatSpeed), s (source), s (difficulty), i (userID)
+    $stmt->bind_param("ssissi", $title, $description, $beatSpeed, $source, $difficulty, $userID);
+
+    if ($stmt->execute()) {
+        header("Location: ../admin/rhythms.php?status=success&message=Irama berjaya ditambah!");
+        exit();
     } else {
-        header("Location: ../admin/rhythms.php?status=error&message=Gagal menyimpan data.");
+        die("SQL Error: " . $stmt->error);
     }
 }

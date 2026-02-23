@@ -64,7 +64,7 @@ $isPractiseFolder = (strpos($_SERVER['PHP_SELF'], '/practice/') !== false);
                     </a>
                 </div>
             <?php else: ?>
-                <a href="login.php" class="px-5 py-2 bg-green-400 text-white text-xs font-black rounded-full hover:bg-green-500 transition-all shadow-md uppercase tracking-wider">
+                <a href="login.php" class="px-5 py-2 bg-blue-400 text-white text-xs font-black rounded-full hover:bg-blue-500 transition-all shadow-md uppercase tracking-wider">
                     Log Masuk
                 </a>
             <?php endif; ?>

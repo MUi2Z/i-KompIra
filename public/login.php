@@ -48,7 +48,7 @@
                 <a href="#" class="text-sm text-[#D4A259] hover:underline">Lupa Kata Laluan?</a>
             </div>
 
-            <button type="submit" class="w-full py-3 bg-[#03c000] text-white font-bold rounded-lg shadow-md hover:bg-[#00ff26] transition duration-200 transform hover:-translate-y-1">
+            <button type="submit" class="w-full py-3 bg-[#4242ff] text-white font-bold rounded-lg shadow-md hover:bg-[#73c7ff] transition duration-200 transform hover:-translate-y-1">
                 MASUK
             </button>
         </form>
