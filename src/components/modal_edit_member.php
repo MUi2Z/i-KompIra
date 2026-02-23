@@ -52,11 +52,12 @@
 
                     <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Program Pengajian</label>
-                        <input list="programmeOptionsEdit" name="programme" id="edit_programme" required 
+                        <!-- <input list="programmeOptionsEdit" name="programme" id="edit_programme" required 
                                placeholder="Cari program..."
-                               class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none">
+                               class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none"> -->
                         
-                        <datalist id="programmeOptionsEdit">
+                        <select name="programme" id="programmeOptionsEdit"
+                        class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none">
                             <option value="1 SVM KPD">
                             <option value="1 SVM KMK">
                             <option value="1 SVM BAK">
@@ -81,7 +82,7 @@
                             <option value="2 DVM BPM">
                             <option value="2 DVM HSK">
                             <option value="2 DVM HBP">
-                        </datalist>
+                        </select name="programme">
                     </div>
                     
                     <div class="space-y-1">
