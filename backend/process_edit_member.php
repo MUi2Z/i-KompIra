@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Tentukan destinasi selepas selesai (Redirect Logic)
     // Jika admin yang buat kerja, balik ke admin/members.php
     // Jika user biasa kemaskini sendiri, balik ke profile mereka
-    $redirectPath = ($_SESSION['role'] == 'admin') ? "../admin/members.php" : "../public/profile.php";
+    $redirectPath = ($_SESSION['role'] == 'admin') ? "../admin/members.php" : "../member/profile.php";
 
     $conn->begin_transaction();
 

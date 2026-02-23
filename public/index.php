@@ -140,7 +140,7 @@ $modulesResult = $conn->query($modulesSql);
                             <h4 class="font-bold text-gray-800 leading-tight"><?= htmlspecialchars($module['moduleName']); ?></h4>
                             <p class="text-xs text-gray-500">Dokumen Rujukan Ahli</p>
                         </div>
-                        <a href="../uploads/docs/<?= $module['moduleDocs']; ?>" target="_blank" class="px-4 py-2 bg-white text-[#D4A259] text-xs font-black rounded-xl border border-[#D4A259] hover:bg-[#D4A259] hover:text-white transition-all">DOWNLOAD</a>
+                        <a href="../uploads/modules/docs/<?= $module['moduleDocs']; ?>" target="_blank" class="px-4 py-2 bg-white text-[#D4A259] text-xs font-black rounded-xl border border-[#D4A259] hover:bg-[#D4A259] hover:text-white transition-all">DOWNLOAD</a>
                     </div>
                 <?php endwhile; ?>
             </div>
