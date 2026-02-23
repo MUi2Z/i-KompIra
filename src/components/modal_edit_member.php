@@ -50,7 +50,7 @@
                         <input type="number" name="kohort" id="edit_kohort" required class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none">
                     </div>
 
-                    <!-- <div class="space-y-1">
+                    <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Program Pengajian</label>
                         <input list="programmeOptionsEdit" name="programme" id="edit_programme" required 
                                placeholder="Cari program..."
@@ -82,9 +82,9 @@
                             <option value="2 DVM HSK">
                             <option value="2 DVM HBP">
                         </datalist>
-                    </div> -->
+                    </div>
                     
-                    <div class="space-y-1">
+                    <!-- <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Program</label>
                         <select name="programme" id="edit_programme" required class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none">
                             <option value="1 SVM KPD">1 SVM KPD</option>
@@ -112,8 +112,7 @@
                             <option value="2 DVM HSK">2 DVM HSK</option>
                             <option value="2 DVM HBP">2 DVM HBP</option>
                         </select>
-                    </div>
-
+                    </div> -->
                     
                     <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Jenis Irama</label>

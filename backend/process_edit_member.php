@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email        = mysqli_real_escape_string($conn, $_POST['email']);
     $fullName     = mysqli_real_escape_string($conn, $_POST['fullName']);
     $NRIC         = mysqli_real_escape_string($conn, $_POST['NRIC']);
-    $programme    = $_POST['programme'];
+    $programme    = mysqli_real_escape_string($conn, $_POST['programme']);
     $beatRoleType = $_POST['beatRoleType'];
     $kohort       = (int)$_POST['kohort'];
     $password     = $_POST['password'];
