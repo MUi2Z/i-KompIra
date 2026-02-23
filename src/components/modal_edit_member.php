@@ -49,40 +49,6 @@
                         <label class="text-sm font-semibold text-gray-700">Kohort</label>
                         <input type="number" name="kohort" id="edit_kohort" required class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none">
                     </div>
-
-                    <!-- <div class="space-y-1">
-                        <label class="text-sm font-semibold text-gray-700">Program Pengajian</label>
-                        <input list="programmeOptionsEdit" name="programme" id="edit_programme" required 
-                               placeholder="Cari program..."
-                               class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A259] outline-none">
-                        
-                        <datalist id="programmeOptionsEdit">
-                            <option value="1 SVM KPD">
-                            <option value="1 SVM KMK">
-                            <option value="1 SVM BAK">
-                            <option value="1 SVM BPM">
-                            <option value="1 SVM HSK">
-                            <option value="1 SVM HBP">
-                            <option value="2 SVM KPD">
-                            <option value="2 SVM KMK">
-                            <option value="2 SVM BAK">
-                            <option value="2 SVM BPM">
-                            <option value="2 SVM HSK">
-                            <option value="2 SVM HBP">
-                            <option value="1 DVM KPD">
-                            <option value="1 DVM KMK">
-                            <option value="1 DVM BAK">
-                            <option value="1 DVM BPM">
-                            <option value="1 DVM HSK">
-                            <option value="1 DVM HBP">
-                            <option value="2 DVM KPD">
-                            <option value="2 DVM KMK">
-                            <option value="2 DVM BAK">
-                            <option value="2 DVM BPM">
-                            <option value="2 DVM HSK">
-                            <option value="2 DVM HBP">
-                        </datalist>
-                    </div> -->
                     
                     <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Program</label>

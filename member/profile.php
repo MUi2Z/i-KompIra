@@ -12,7 +12,8 @@ if (!isset($_SESSION['userID'])) {
 $userID = $_SESSION['userID'];
 
 // Ambil maklumat user & profil
-$sql = "SELECT u.email, u.userName, u.role, u.created_at, m.status, m.fullName, m.NRIC, m.programme, m.beatRoleType, m.kohort 
+$sql = "SELECT u.userID, u.email, u.userName, u.role, u.created_at, 
+               m.profileID, m.status, m.fullName, m.NRIC, m.programme, m.beatRoleType, m.kohort 
         FROM users u 
         LEFT JOIN members m ON u.userID = m.userID
         WHERE u.userID = ?";
@@ -164,17 +165,26 @@ if ($userData['role'] == 'user') {
                     }
                 }
                 
-                function openEditModal(data, profileID) {
-                    // Isi data ke dalam form modal
-                    document.getElementById('edit_profileID').value = profileID;
-                    document.getElementById('edit_userID').value = <?= $userID; ?>; // UserID dari session
-                    document.getElementById('edit_email').value = data.email;
-                    document.getElementById('edit_fullName').value = data.fullName;
-                    document.getElementById('edit_NRIC').value = data.NRIC;
-                    document.getElementById('edit_kohort').value = data.kohort;
-                    document.getElementById('edit_programme').value = data.programme;
-                    document.getElementById('edit_beatRoleType').value = data.beatRoleType;
+                function openEditModal(member) {
+                    // ID dan Nama
+                    document.getElementById('edit_profileID').value = member.profileID;
+                    document.getElementById('edit_userID').value = member.userID;
+                    document.getElementById('edit_email').value = member.email;
+                    document.getElementById('edit_fullName').value = member.fullName;
+                    document.getElementById('edit_NRIC').value = member.NRIC;
+                    document.getElementById('edit_kohort').value = member.kohort;
                 
+                    // BAHAGIAN KRITIKAL:
+                    // Pastikan 'member.programme' wujud dalam data yang dihantar dari senarai table
+                    if(member.programme) {
+                        document.getElementById('edit_programme').value = member.programme;
+                    }
+                    
+                    if(member.beatRoleType) {
+                        document.getElementById('edit_beatRoleType').value = member.beatRoleType;
+                    }
+                
+                    // Tunjukkan modal
                     toggleModal('editMemberModal', 'editMemberCard');
                 }
                 </script>
