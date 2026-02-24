@@ -15,7 +15,9 @@
             <span class="sidebar-text text-xl font-bold text-gray-800 whitespace-nowrap">i-KompIra</span>
         </a>
         <button onclick="collapseDesktop()" class="hidden lg:block text-[#D4A259] hover:bg-[#D4A259]/10 p-1 rounded-md">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
+            <svg class="w-8 h-8" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h10"/>
+            </svg>
         </button>
     </div>
 

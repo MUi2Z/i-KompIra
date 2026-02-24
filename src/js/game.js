@@ -183,7 +183,7 @@ function flashCircle(color) {
 function stopGame() {
     gameActive = false;
     document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-title').innerText = "TAMAT PERMAINAN";
+    document.getElementById('status-title').innerText = "PERMAINAN TAMAT!";
     document.getElementById('final-score-display').classList.remove('hidden');
     document.getElementById('final-score-val').innerText = score;
 }
@@ -201,12 +201,12 @@ window.addEventListener('keydown', e => {
 const tutorialSteps = [
     {
         title: "Konsep Permainan",
-        desc: "Tekan butang mengikut irama yang jatuh! Anda mempunyai 5 nyawa ❤️. Setiap kali terlepas (Miss), nyawa akan berkurang.",
+        desc: "Tekan butang mengikut irama yang bergerak! Anda mempunyai 5 nyawa ❤️. Setiap kali terlepas (Miss), nyawa akan berkurang.",
         image: "../src/img/tutor_lifeScore.png", // Ganti dengan path gambar anda
     },
     {
         title: "Bezakan Warna Peranan Yang Dipilih",
-        desc: "Warna <span class='text-[#b8860b] font-bold'>EMAS untuk Melalu</span>. Warna <span class='text-[#006400] font-bold'>Hijau untuk Menyilang</span> dan Warna <span class='text-[#8b0000] font-bold'>Merah untuk Menganak</span>. Jika salah, nyawa akan berkurang!",
+        desc: "Warna <span class='text-[#b8860b] font-bold'>EMAS untuk Melalu</span>. Warna <span class='text-[#006400] font-bold'>HIJAU untuk Menyilang</span> dan Warna <span class='text-[#8b0000] font-bold'>MERAH untuk Menganak</span>. Jika salah, nyawa akan berkurang!",
         image: "../src/img/tutor_colorMark.png",
     },
     {

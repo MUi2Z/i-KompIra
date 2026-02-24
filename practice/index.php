@@ -64,49 +64,60 @@ $result = mysqli_query($conn, $query);
 
 <div class="relative flex flex-col items-center justify-center min-h-screen bg-[#fdfaf1] text-[#432818] overflow-hidden select-none">
     
-    <a href="javascript:history.back()" class="absolute top-6 left-6 z-[60] flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all text-sm font-bold">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        KEMBALI
+    <a href="javascript:history.back()" 
+       class="fixed top-6 left-6 z-[70] flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl shadow-md hover:bg-white hover:scale-105 active:scale-95 transition-all text-sm font-bold text-[#7f5539]">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+        </svg>
+        <span>KEMBALI</span>
     </a>
 
-    <div id="overlay" class="fixed inset-0 z-50 flex items-center justify-center flex-col gap-8 text-center px-4 overlay-light">
-        <div id="selection-container" class="w-full max-w-2xl">
-            <button onclick="showTutorial()" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-500 hover:text-[#D4A259] hover:border-[#D4A259] transition-all">
-                <i class="fas fa-question-circle"></i> Tutorial Bermain
-            </button>
-            <h2 id="status-title" class="text-4xl font-black text-[#7f5539] mb-8 uppercase tracking-tighter">Pilih Irama Kompang</h2>
+    <div id="overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-start overflow-y-auto py-12 px-4 overlay-light transition-all duration-500">
+        <div id="selection-container" class="w-full max-w-2xl my-auto"> 
+            <div class="flex mb-4 justify-end">
+                <button onclick="showTutorial()" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-full text-xs font-bold text-gray-600 shadow-sm hover:text-[#D4A259] hover:border-[#D4A259] transition-all">
+                    <i><svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm9.008-3.018a1.502 1.502 0 0 1 2.522 1.159v.024a1.44 1.44 0 0 1-1.493 1.418 1 1 0 0 0-1.037.999V14a1 1 0 1 0 2 0v-.539a3.44 3.44 0 0 0 2.529-3.256 3.502 3.502 0 0 0-7-.255 1 1 0 0 0 2 .076c.014-.398.187-.774.48-1.044Zm.982 7.026a1 1 0 1 0 0 2H12a1 1 0 1 0 0-2h-.01Z" clip-rule="evenodd"/>
+                    </svg></i>
+                     Tutorial Bermain
+                </button>
+            </div>
+    
+            <h2 id="status-title" class="text-3xl md:text-4xl text-center font-black text-[#7f5539] mb-8 uppercase tracking-tighter">Pilih Irama Kompang</h2>
             
-            <div id="final-score-display" class="hidden mb-6 p-4 bg-orange-100 rounded-lg">
-                <p class="text-lg font-bold">Permainan Tamat!</p>
+            <div id="final-score-display" class="hidden text-center mb-6 p-4 bg-orange-100 rounded-lg">
+                <p class="text-lg text-center font-bold">Permainan Tamat!</p>
                 <p id="final-score-val" class="text-3xl font-black text-orange-700">0</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                <?php while($row = mysqli_fetch_assoc($result)): ?>
+    
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                <?php 
+                mysqli_data_seek($result, 0); // Reset pointer jika perlu
+                while($row = mysqli_fetch_assoc($result)): 
+                ?>
                     <button 
-                        class="btn-song p-4 rounded-xl text-left"
+                        class="btn-song p-4 rounded-xl text-left active:scale-95 transition-transform"
                         data-source='<?= htmlspecialchars($row['source'], ENT_QUOTES, 'UTF-8') ?>'
                         data-speed="<?= $row['beatSpeed'] ?>"
                         onclick="handleSongSelection(this)">
-
-                        <span class="block font-black text-lg"><?= htmlspecialchars($row['title']) ?></span>
-                        <span class="text-xs opacity-70"><?= $row['difficulty'] ?> • Speed: <?= $row['beatSpeed'] ?></span>
+                        <span class="block font-black text-lg leading-tight"><?= htmlspecialchars($row['title']) ?></span>
+                        <span class="text-xs opacity-70"><?= $row['difficulty'] ?> • BPM: <?= $row['beatSpeed'] ?></span>
                     </button>
                 <?php endwhile; ?>
             </div>
-
-            <div id="role-selection" class="hidden animate-fade-in">
-                <p class="text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">Pilih Peranan Anda</p>
+    
+            <div id="role-selection" class="hidden animate-fade-in pb-10">
+                <p class="text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest text-center">Pilih Peranan Anda</p>
                 <div class="flex flex-wrap justify-center gap-3">
-                    <button onclick="startGame('melalu')" class="bg-[#b8860b] text-white px-6 py-3 rounded-lg font-bold">MELALU</button>
-                    <button onclick="startGame('menyilang')" class="bg-[#006400] text-white px-6 py-3 rounded-lg font-bold">MENYILANG</button>
-                    <button onclick="startGame('menganak')" class="bg-[#8b0000] text-white px-6 py-3 rounded-lg font-bold">MENGANAK</button>
-                    <button onclick="startGame('auto')" class="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold ring-4 ring-gray-200">AUTO PLAY</button>
+                    <button onclick="startGame('melalu')" class="flex-1 min-w-[120px] bg-[#b8860b] text-white px-6 py-3 rounded-lg font-bold shadow-md">MELALU</button>
+                    <button onclick="startGame('menyilang')" class="flex-1 min-w-[120px] bg-[#006400] text-white px-6 py-3 rounded-lg font-bold shadow-md">MENYILANG</button>
+                    <button onclick="startGame('menganak')" class="flex-1 min-w-[120px] bg-[#8b0000] text-white px-6 py-3 rounded-lg font-bold shadow-md">MENGANAK</button>
+                    <button onclick="startGame('auto')" class="w-full mt-2 bg-gray-800 text-white px-6 py-3 rounded-lg font-bold ring-4 ring-gray-100">AUTO PLAY</button>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <div class="text-center mb-6">
         <h1 id="display-mode" class="text-2xl font-black text-[#7f5539] uppercase tracking-widest">--</h1>
         <div id="game-stats" class="flex gap-4 justify-center mt-2 font-bold opacity-0">
