@@ -80,7 +80,7 @@ include '../src/components/header.php';
                 <div class="flex justify-between items-center mb-2">
                     <label class="text-xs font-black text-gray-400 uppercase">Data JSON Terjana</label>
                     <button onclick="copyJSON()" class="text-[10px] bg-gray-800 text-white px-4 py-1.5 rounded-full hover:bg-black transition-all">
-                        <i class="fas fa-copy mr-1"></i> SALIN DATA
+                        <i class="fas fa-copy mr-1"></i> SALIN BEATBAP
                     </button>
                 </div>
                 <textarea id="json-output" readonly class="w-full h-40 bg-gray-50 border border-gray-200 rounded-2xl p-4 font-mono text-[11px] text-gray-600 outline-none resize-none shadow-inner"></textarea>
