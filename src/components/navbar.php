@@ -43,7 +43,7 @@ $isPractiseFolder = (strpos($_SERVER['PHP_SELF'], '/practice/') !== false);
                 <li><a href="index.php#tutorial" class="hover:text-amber-800 transition">Tutorial</a></li>
                 <li><a href="index.php#aktiviti" class="hover:text-amber-800 transition">Aktiviti</a></li>
                 
-                <?php if ($isLoggedIn && ($displayRole == 'Admin' || $displayRole == 'Member')): ?>
+                <?php if ($isLoggedIn && ($displayRole == 'Admin' || $displayRole == 'Member' || $displayRole == 'User')): ?>
                     <li><a href="<?= $profileRedirect; ?>" class="text-amber-700 border-l pl-8 border-gray-300"><?= $displayRole; ?> Panel</a></li>
                 <?php endif; ?>
             </ul>

@@ -4,6 +4,8 @@
             <span class="text-sm text-orange-900 sm:text-center"><a href="../" class="hover:underline">i-KompIra</a> dari KIRAMA KVKS ©2025.</span>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../src/js/return-confirm.js"></script>
     <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     <script>

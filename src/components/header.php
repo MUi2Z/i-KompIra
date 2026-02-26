@@ -8,6 +8,7 @@
     <link rel="icon" href="../src/img/favicon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="src/css/input.css">
     <link href="../src/css/output.css" rel="stylesheet">
     <link href="/output.css" rel="stylesheet">

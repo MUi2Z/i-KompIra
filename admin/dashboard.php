@@ -99,13 +99,13 @@
             <!-- Profile Header -->
             <div class="my-4 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="flex flex-col lg:flex-row items-center gap-6">
-                    <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center border-4 border-white shadow-md">
-                        <span class="text-2xl font-bold text-amber-600"><?php echo strtoupper(substr($currentUserName, 0, 1)); ?></span>
+                    <div class="w-24 h-24 <?php echo ($role === 'member') ? 'bg-[#E7D8B8]' : 'bg-gray-200'; ?> rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                        <img src="../src/img/default_avatar.png" alt="avatar" class="w-28 h-28 object-cover rounded-full">
                     </div>
 
                     <div class="flex-1 text-center lg:text-left">
                         <h2 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($currentUserName); ?></h2>
-                        <p class="text-gray-500 text-sm">Administrator i-KompIra</p>
+                        <p class="text-gray-500 text-sm">Penyelia i-KompIra</p>
 
                         <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="flex items-center gap-2 text-sm text-gray-600">

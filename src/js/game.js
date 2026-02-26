@@ -9,7 +9,7 @@ let score = 0;
 let lives = 5;
 
 const CONFIG = {
-    speed: 5,
+    speed: 0.5,
     hitZone: 60,
     spawnOffset: 2000 
 };
