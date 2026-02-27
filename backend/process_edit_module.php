@@ -34,8 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssi", $moduleName, $moduleDesc, $moduleID);
 
     if ($stmt->execute()) {
-        header("Location: ../admin/modules.php?status=success&message=Modul+berjaya+dikemaskini.");
+        header("Location: ../admin/view_module.php?status=success&message=Modul+berjaya+dikemaskini.");
     } else {
-        header("Location: ../admin/modules.php?status=error&message=Gagal+kemaskini+modul.");
+        header("Location: ../admin/view_module.php?status=error&message=Gagal+kemaskini+modul.");
     }
 }

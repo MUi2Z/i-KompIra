@@ -39,10 +39,14 @@ include '../src/components/header.php';
                     </div>
                     <div class="pt-2">
                         <button id="btn-start" onclick="startRecording()" class="w-full py-4 bg-[#D4A259] text-white font-black rounded-2xl shadow-lg hover:bg-[#b88a4a] transition-all flex items-center justify-center gap-2">
-                            <i class="fas fa-play"></i> MULA RAKAM
+                            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M8.6 5.2A1 1 0 0 0 7 6v12a1 1 0 0 0 1.6.8l8-6a1 1 0 0 0 0-1.6l-8-6Z" clip-rule="evenodd"/>
+                            </svg> MULA RAKAM
                         </button>
                         <button id="btn-stop" onclick="stopRecording()" class="hidden w-full py-4 bg-red-500 text-white font-black rounded-2xl shadow-lg hover:bg-red-600 transition-all flex items-center justify-center gap-2">
-                            <i class="fas fa-stop"></i> BERHENTI
+                            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                              <rect width="12" height="12" x="6" y="6" stroke="currentColor" stroke-linejoin="round" stroke-width="2" rx="1"/>
+                            </svg> BERHENTI
                         </button>
                     </div>
                 </div>
