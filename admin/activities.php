@@ -13,7 +13,7 @@ if (!isset($_SESSION['role']) || strtolower($_SESSION['role']) !== 'admin') {
 }
 
 // --- LOGIK PAGINATION ---
-$limit = 5; // Bilangan data per halaman
+$limit = 5; 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 
@@ -21,7 +21,7 @@ $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 $total_results = $conn->query("SELECT COUNT(*) as id FROM activities")->fetch_assoc()['id'];
 $pages = ceil($total_results / $limit);
 
-// 2. Fetch data dengan LIMIT dan OFFSET
+// 2. Fetch data dengan LIMIT dan OFFSET (Termasuk lajur baharu)
 $sql = "SELECT a.*, COUNT(p.participationID) as total_participants 
         FROM activities a 
         LEFT JOIN participations p ON a.activityID = p.activityID 
@@ -70,8 +70,8 @@ $result = $conn->query($sql);
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Maklumat Aktiviti</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Penerangan Ringkas</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Statistik</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lokasi & Tarikh</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Statistik & Status</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Tindakan</th>
                         </tr>
                     </thead>
@@ -88,32 +88,51 @@ $result = $conn->query($sql);
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars($row['activityTitle']); ?></div>
-                                                <div class="text-xs text-gray-500 uppercase"><?php echo date('d M Y', strtotime($row['updatedAt'])); ?></div>
+                                                <div class="text-[10px] text-gray-400 uppercase">Dibuat: <?php echo date('d M Y', strtotime($row['createdAt'])); ?></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="text-sm text-gray-600 line-clamp-2 max-w-xs">
-                                            <?php echo htmlspecialchars($row['activityDesc']); ?>
-                                        </div>
+                                        <div class="text-sm text-gray-800 font-medium"><?php echo htmlspecialchars($row['location']); ?></div>
+                                        <div class="text-xs text-gray-500">Show: <?php echo date('d/m/Y', strtotime($row['showDate'])); ?></div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            <?php echo $row['total_participants']; ?> Peserta
+                                        <div class="flex flex-col gap-1">
+                                            <span class="inline-flex items-center w-fit px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                <?php echo $row['total_participants']; ?> / <?php echo $row['maxParticipants']; ?> Peserta
+                                            </span>
+                                            <?php 
+                                                $statusColor = ($row['status'] == 'Buka') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                                            ?>
+                                            <span class="inline-flex items-center w-fit px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $statusColor; ?>">
+                                                <?php echo $row['status']; ?>
+                                            </span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        <div class="flex justify-center gap-3">
-                                            <button onclick="openEditModal('editActivityModal', 'editActivityCard', {activityID: '<?php echo $row['activityID']; ?>',activityTitle: '<?php echo addslashes($row['activityTitle']); ?>',activityDesc: '<?php echo addslashes($row['activityDesc']); ?>',imagePath: '../uploads/activities/<?php echo $row['activityThumbnail']; ?>'})" 
-                                                    class="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 rounded-lg transition-all">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                            </button>
-                                            <a href="activity_details.php?id=<?php echo $row['activityID']; ?>" class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition-all">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                            </a>
+                                        <div class="flex justify-center gap-2">
                                             <button type="button" 
-                                                    onclick="confirmDelete('../backend/delete_activity.php?id=<?php echo $row['activityID']; ?>', 'Anda pasti mahu memadam aktiviti ini?')"
-                                                    class="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-all">
+                                                    onclick='openEditModal(<?php echo json_encode($row); ?>)'
+                                                    class="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 rounded-lg transition-all"
+                                                    title="Kemaskini">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </button>
+
+                                            <a href="activity_details.php?id=<?php echo $row['activityID']; ?>" 
+                                               class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition-all"
+                                               title="Lihat Butiran">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                </svg>
+                                            </a>
+
+                                            <button type="button" 
+                                                    onclick="confirmAction('../backend/delete_activity.php?id=<?php echo $row['activityID']; ?>', 'Adakah anda pasti mahu memadam aktiviti ini?')"
+                                                    class="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-all"
+                                                    title="Padam">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m4-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                 </svg>
@@ -123,7 +142,7 @@ $result = $conn->query($sql);
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <tr><td colspan="4" class="px-6 py-12 text-center text-gray-400">Tiada rekod.</td></tr>
+                            <tr><td colspan="4" class="px-6 py-12 text-center text-gray-400">Tiada rekod aktiviti dijumpai.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -155,5 +174,59 @@ $result = $conn->query($sql);
 
 <?php include '../src/components/modal_add_activity.php'; ?>
 <?php include '../src/components/modal_edit_activity.php'; ?>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../src/js/modal-logic.js"></script>
+
+<script>
+/**
+ * Fungsi Universal untuk Padam dengan SweetAlert2
+ */
+function confirmAction(url, message) {
+    Swal.fire({
+        title: 'Pengesahan',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Ya, Padam!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+
+/**
+ * Fungsi untuk mengisi data ke dalam Modal Edit
+ */
+function openEditModal(data) {
+    // Isikan semua medan modal edit berdasarkan ID yang kita tetapkan
+    document.getElementById('edit_activityID').value = data.activityID;
+    document.getElementById('edit_activityTitle').value = data.activityTitle;
+    document.getElementById('edit_activityDesc').value = data.activityDesc;
+    document.getElementById('edit_trainDate').value = data.trainDate;
+    document.getElementById('edit_showDate').value = data.showDate;
+    document.getElementById('edit_location').value = data.location;
+    document.getElementById('edit_status').value = data.status;
+    // Jika maxParticipants ada dalam modal edit:
+    if(document.getElementById('edit_maxParticipants')) {
+        document.getElementById('edit_maxParticipants').value = data.maxParticipants;
+    }
+
+    // Thumbnail Preview
+    const previewDiv = document.getElementById('current_image_preview');
+    const previewImg = document.getElementById('existing_thumb');
+    if (data.activityThumbnail && previewImg) {
+        previewImg.src = "../uploads/activities/" + data.activityThumbnail;
+        previewDiv.classList.remove('hidden');
+    }
+
+    // Paparkan modal
+    toggleModal('editActivityModal', 'editActivityCard');
+}
+</script>
+
 <?php include '../src/components/footer.php'; ?>

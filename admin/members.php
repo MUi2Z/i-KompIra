@@ -144,6 +144,8 @@ $result = $conn->query($sql);
                     <?php if ($page < $pages): ?>
                         <a href="?page=<?php echo $page + 1; ?>" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all">&rarr;</a>
                     <?php endif; ?>
+                </div>
+            </div>
             <script>
             function toggleModal(modalId, cardId) {
                 const modal = document.getElementById(modalId);
@@ -177,8 +179,6 @@ $result = $conn->query($sql);
                 toggleModal('editMemberModal', 'editMemberCard');
             }
             </script>
-                </div>
-            </div>
 
         </div>
     </main>

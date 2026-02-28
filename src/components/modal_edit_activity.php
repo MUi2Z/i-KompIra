@@ -8,36 +8,53 @@
 
         <div class="p-6 max-h-[80vh] overflow-y-auto">
             <form action="../backend/process_edit_activity.php" method="POST" enctype="multipart/form-data">
-                <div class="space-y-5">
-                    <input type="hidden" name="activityID" id="edit_activityID">
-                    
+                <input type="hidden" name="activityID" id="edit_activityID">
+                
+                <div class="space-y-4">
                     <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Tajuk Aktiviti</label>
-                        <input type="text" name="activityTitle" id="edit_activityTitle" required 
-                               class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all">
+                        <input type="text" name="activityTitle" id="edit_activityTitle" required class="w-full px-4 py-2 bg-gray-50 border rounded-xl">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Tarikh Latihan</label>
+                            <input type="date" name="trainDate" id="edit_trainDate" required class="w-full px-4 py-2 bg-gray-50 border rounded-xl">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Tarikh Persembahan</label>
+                            <input type="date" name="showDate" id="edit_showDate" required class="w-full px-4 py-2 bg-gray-50 border rounded-xl">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Lokasi</label>
+                            <input type="text" name="location" id="edit_location" required class="w-full px-4 py-2 bg-gray-50 border rounded-xl">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Status</label>
+                            <select name="status" id="edit_status" class="w-full px-4 py-2 bg-gray-50 border rounded-xl">
+                                <option value="open">Buka</option>
+                                <option value="ended">Tamat</option>
+                                <option value="full">Penuh</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="space-y-1">
                         <label class="text-sm font-semibold text-gray-700">Penerangan</label>
-                        <textarea name="activityDesc" id="edit_activityDesc" rows="3" required 
-                                  class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all"></textarea>
+                        <textarea name="activityDesc" id="edit_activityDesc" rows="3" required class="w-full px-4 py-2 bg-gray-50 border rounded-xl"></textarea>
                     </div>
 
                     <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
-                        <label class="block text-xs font-bold text-blue-700 mb-2 uppercase">Thumbnail (Biarkan kosong jika tiada perubahan)</label>
-                        
-                        <div id="current_image_preview" class="mb-3 hidden">
-                            <p class="text-[10px] text-gray-500 mb-1">Gambar semasa:</p>
-                            <img src="" id="existing_thumb" class="h-20 w-32 object-cover rounded border">
-                        </div>
-
-                        <input type="file" name="activityThumbnail" accept="image/*" 
-                               class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-600 file:text-white cursor-pointer">
+                        <label class="block text-xs font-bold text-blue-700 mb-2 uppercase">Thumbnail (Opsyenal)</label>
+                        <input type="file" name="activityThumbnail" accept="image/*" class="block w-full text-xs text-gray-500">
                     </div>
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-3 mt-8 pt-6 border-t">
-                    <button type="submit" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700">KEMASKINI DATA</button>
+                    <button type="submit" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl">KEMASKINI DATA</button>
                     <button type="button" onclick="toggleModal('editActivityModal', 'editActivityCard')" class="flex-1 py-3 bg-white text-gray-500 font-semibold border rounded-xl">BATAL</button>
                 </div>
             </form>
